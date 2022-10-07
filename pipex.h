@@ -20,15 +20,19 @@
 
 typedef struct s_vault
 {
-	char *paths;
-	char **path_names;
-	char *prog_search;
+	char	*paths;
+	char	**path_names;
+	char	*prog_search;
+	char	**argv;
+	int		argc;
+	char	**envp;
 }	t_vault;
 
 /***** Initialisation *****/
-void    find_paths(t_vault *path_list, char **envp);
+void	find_paths(t_vault *data);
+void	find_prog(t_vault *data);
 
 /***** POUR DEBUG *****/
-void    check_paths(t_vault *path_list);
+void	check_paths(t_vault *data);
 
 #endif
