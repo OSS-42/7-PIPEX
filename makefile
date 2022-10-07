@@ -21,6 +21,7 @@ NO_OF_FILES := $(words $(wildcard *.c))
 
 #****SOURCES****
 SRC = pipex.c\
+		pipex_utils.c
 
 #HEADER = push_swap.h
 

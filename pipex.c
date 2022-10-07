@@ -6,45 +6,71 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/06 16:52:57 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/06 21:14:50 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int main(int argc, char **argv, char **envp)
+void    find_prog(t_vault *path_list, char **argv, char **envp)
 {
     size_t  x;
-    size_t  y;
+    int y;
+    char    **options;
 
     x = 0;
     y = 0;
-    (void)argc;
-    (void)argv;
- 
-    char *paths;
-    char **path_names;
-    paths = NULL;
+    options = ft_split(argv[1], ' ');
+    while(argv[y])
+    {
+        printf("%s\n", options[y]);
+        y++;
+    }
+    while (path_list->path_names[x])
+    {
+        path_list->prog_search = ft_strjoin(path_list->path_names[x], "/");
+        path_list->prog_search = ft_strjoin(path_list->prog_search, argv[1]);
+        if (execve(path_list->prog_search, options, envp) == -1)
+        {
+            x++;
+            printf("path for prog : %s - %s\n", path_list->path_names[x], path_list->prog_search);
+        }
+            
+    }
+    return ;
+}
+
+void    find_paths(t_vault *path_list, char **envp)
+{
+    size_t  x;
+    size_t  slen;
+
+    x = 0;
     while (envp[x])
     {
         if (ft_strnstr(envp[x], "PATH", 4) != NULL)
         {
-            while (envp[x][y])
-                y++;
-            paths = ft_strdup(envp[x]);
+            path_list->paths = ft_strdup(envp[x]);
             break ;
         }
         x++;
     }
-    printf("paths : %s\n", paths);
-    path_names = ft_split(paths, ':');
-    x = 0;
-    while (path_names[x])
-    {
-        printf("Path_name #%zu : %s\n", x, path_names[x]);
-        x++;
-    }
-    //execve("/usr/bin/env", options, envp);
+    path_list->path_names = ft_split(path_list->paths, ':');
+    slen = ft_strlen(path_list->path_names[0]);
+    path_list->path_names[0] = ft_substr(path_list->path_names[0], 5, slen);
+    return ;
+}
+
+int main(int argc, char **argv, char **envp)
+{
+
+    t_vault path_list;
+
+    (void)argc;
+    path_list.paths = NULL;
+    find_paths(&path_list, envp);
+    check_paths(&path_list); //DEBUG
+    find_prog(&path_list, argv, envp);
     return (0);
 }
 
