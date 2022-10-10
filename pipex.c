@@ -6,73 +6,72 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/06 21:14:50 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/09 21:48:06 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	find_prog(t_vault *data)
+void    find_prog(t_vault *path_list, char **argv, char **envp)
 {
-	size_t	x;
-	int		y;
-	char	**options;
+    size_t  x;
+    int y;
+    char    **options;
 
-	x = 0;
-	y = 0;
-	options = malloc(sizeof(char) * data->argc);
-	while (data->argv[y + 1])
-	{
-		options[y] = data->argv[y + 1];
-		printf("%s\n", options[y]);
-		y++;
-	}
-	while (data->path_names[x])
-	{
-		data->prog_search = ft_strjoin(data->path_names[x], "/");
-		data->prog_search = ft_strjoin(data->prog_search, data->argv[1]);
-		if (execve(data->prog_search, options, data->envp) == -1)
-		{
-			x++;
-			printf("path for prog : %s - %s\n", data->path_names[x], data->prog_search);
-		}
-	}
-	return ;
+    x = 0;
+    y = 0;
+    options = ft_split(argv[1], ' ');
+    while(options[y])
+    {
+        printf("options #%d : %s\n", y, options[y]);
+        y++;
+    }
+    options[y] = '\0';
+    while (path_list->path_names[x])
+    {
+        path_list->prog_search = ft_strjoin(path_list->path_names[x], "/");
+        path_list->prog_search = ft_strjoin(path_list->prog_search, options[0]);
+        if (execve(path_list->prog_search, options, envp) == -1)
+        {
+            x++;
+            printf("path for prog : %s - %s\n", path_list->path_names[x], path_list->prog_search);
+        }
+    }
+    return ;
 }
 
-void	find_paths(t_vault *data)
+void    find_paths(t_vault *path_list, char **envp)
 {
-	size_t	x;
-	size_t	slen;
+    size_t  x;
+    size_t  slen;
 
-	x = 0;
-	while (data->envp[x])
-	{
-		if (ft_strnstr(data->envp[x], "PATH", 4) != NULL)
-		{
-			data->paths = ft_strdup(data->envp[x]);
-			break ;
-		}
-		x++;
-	}
-	data->path_names = ft_split(data->paths, ':');
-	slen = ft_strlen(data->path_names[0]);
-	data->path_names[0] = ft_substr(data->path_names[0], 5, slen);
-	return ;
+    x = 0;
+    while (envp[x])
+    {
+        if (ft_strnstr(envp[x], "PATH", 4) != NULL)
+        {
+            path_list->paths = ft_strdup(envp[x]);
+            break ;
+        }
+        x++;
+    }
+    path_list->path_names = ft_split(path_list->paths, ':');
+    slen = ft_strlen(path_list->path_names[0]);
+    path_list->path_names[0] = ft_substr(path_list->path_names[0], 5, slen);
+    return ;
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	t_vault	data;
 
-	data.paths = NULL;
-	data.argc = argc;
-	data.argv = argv;
-	data.envp = envp;
-	find_paths(&data);
-	check_paths(&data); //DEBUG
-	find_prog(&data);
-	return (0);
+    t_vault path_list;
+
+    (void)argc;
+    path_list.paths = NULL;
+    find_paths(&path_list, envp);
+    check_paths(&path_list); //DEBUG
+    find_prog(&path_list, argv, envp);
+    return (0);
 }
 
 /*
@@ -96,11 +95,11 @@ void	find_path(void)
 /*
 int main(int argc, char **argv, char **envp)
 {
-	char *options[3] = {"ls", "-la", NULL};
+    char *options[3] = {"ls", "-la", NULL};
 
-	(void)argc;
-	(void)argv;
-	execve("/usr/bin/ls", options, envp);
-	return (0);
+    (void)argc;
+    (void)argv;
+    execve("/usr/bin/ls", options, envp);
+    return (0);
 }
 */
