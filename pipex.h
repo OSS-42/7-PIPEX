@@ -29,14 +29,15 @@ typedef struct s_vault
 	char	**envp;
 	t_pid	pid1;
 	t_pid	pid2;
-	t_pid	status_child;
+	t_pid	return_status;
+	int		status_value;
 	int		*pipe_ends[2];
 }	t_vault;
 
 /***** Initialisation *****/
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data);
-void	exec_cmd(t_vault * data);
+void	exec_cmd(t_vault *data);
 
 /***** POUR DEBUG *****/
 void	check_paths(t_vault *data);
