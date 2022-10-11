@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include "includes/libft/libft.h"
 
 typedef struct s_vault
@@ -26,11 +27,16 @@ typedef struct s_vault
 	char	**argv;
 	int		argc;
 	char	**envp;
+	t_pid	pid1;
+	t_pid	pid2;
+	t_pid	status_child;
+	int		*pipe_ends[2];
 }	t_vault;
 
 /***** Initialisation *****/
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data);
+void	exec_cmd(t_vault * data);
 
 /***** POUR DEBUG *****/
 void	check_paths(t_vault *data);
