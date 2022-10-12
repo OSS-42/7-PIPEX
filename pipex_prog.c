@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/11 13:47:59 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:02:29 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	find_prog(t_vault *data)
 {
-	size_t  x;
+	size_t	x;
 	int		y;
 	char	**options;
 
@@ -45,8 +45,8 @@ void	find_prog(t_vault *data)
 
 void	find_paths(t_vault *data)
 {
-	size_t  x;
-	size_t  slen;
+	size_t	x;
+	size_t	slen;
 
 	x = 0;
 	while (data->envp[x])
