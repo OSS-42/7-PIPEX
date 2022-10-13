@@ -6,13 +6,13 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/12 16:19:50 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/13 11:22:15 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	exec_cmd(t_vault *data)
+void	exec_cmd(t_vault *data, int x)
 {
 	find_paths(data);
 	check_paths(data); //DEBUG
@@ -50,13 +50,33 @@ int	piping(t_vault *data)
 {
 	char	secret[31];
 	char	*pid_val;
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	while (x < data->nbr_args - 1)
+	{
+		if (pipe(data->pipe_ends[x]) == -1)
+			return (0);
+		x++;
+	}
+	while (y < data->nbr_args)
+	{
+		data->pid[y] = fork();
+		if (data->pid[y] == -1)
+			return (0);
+		else if (data->pid[y] == 0)
+		{
+			dup2 & pipe;
+			exec_cmd(data, y + 2);
+		}
+		y++;
+	}
+	y = 0;
+	while (waitpid(0, &data->status, 0))
 	
-	if (pipe(data->pipe_ends) == -1)
-		return (0);
-	data->pid1 = fork();
-	if (data->pid1 == -1)
-		return (0);
-	else if (data->pid1 == 0)
+
 	{
 //		printf("#1 : OSS %d\n", getpid());
 		pid_val = ft_itoa(getpid());
@@ -121,6 +141,7 @@ int	main(int argc, char **argv, char **envp)
 	data.argc = argc;
 	data.argv = argv;
 	data.envp = envp;
+	data.nbr_args = argc - 3;
 //	dup_fds(&data);
 //	piping(&data);
 	exec_cmd(&data);
