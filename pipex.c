@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/13 12:25:55 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/13 16:03:58 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exec_cmd(t_vault *data, int x)
 	find_prog(data);
 }
 
-void	dup_fds(t_vault *data)
+void	dup_fds(t_vault *data, int y)
 {
 	int		fd;
 	int		fd_in;
@@ -27,24 +27,29 @@ void	dup_fds(t_vault *data)
 	int		reception;
 	char	message_received[14];
 
-	fd = open("test.txt", O_RDONLY);
-	if (!fd)
-		return ;
 	// considerer incrementation des pipes si plusieurs commandes
-	fd_in = dup2(fd, 0);
-	fd_out = dup2(data->pipe_ends[1], 1);
-	if (!fd_out || !fd_in)
-		return ;
-	reception = read(fd, message_received, 13);
-	if (reception == -1)
-		return ;
-	message_received[reception] = '\0';
-	printf("le fd %d contient %s\n", fd_in, message_received);
-	reception = read(fd_out, message_received, 13);
-	if (reception == -1)
-		return ;
-	message_received[reception] = '\0';
-	printf("le fd %d contient %s\n", fd_out, message_received);
+	if (y == 0)
+	{
+		fd_in = open("test.txt", O_RDONLY);
+		fd_out = dup2(data->pipe_ends[y][2 * y + 1]);
+		if (!fd_in || !fd_out)
+			return ;
+	}
+	else if (y < data->nbr_args)
+	{
+		fd_in = dup2(data->pipe_ends[y][2 * y - 2]);
+		fd_out = dup2(data->pipe_ends[y][2 * y + 1]);
+		if (!fd_in || !fd_out)
+			return ;
+	}
+	else if (y == data->nbr_args)
+	{
+		fd_in = dup2(data->pipe_ends[y][2 * y - 2]);
+		fd_out = write("output.txt", resultat commande, taille resultat);
+		if (!fd_in || !fd_out)
+			return ;
+	}
+	return ;
 }
 
 int	piping(t_vault *data)
@@ -69,19 +74,22 @@ int	piping(t_vault *data)
 			return (0);
 		else if (data->pid[y] == 0)
 		{
-			dup2 & pipe;
+			dup_fds(data, y);
+			close(data->pipe_ends[y][2 * y - 2]);
+			close(data->pipe_ends[y][2 * y + 1]);
 			exec_cmd(data, y + 2);
 			exit (0);
 		}
 		y++;
 	}
 	x = 0;
-	while(x < data->nbr_args - 1)
+	while (x < data->nbr_args - 1)
 	{
 		close (data->pipe_ends[x][1]);
 		close (data->pipe_ends[x][0]);
 		x++;
 	}
+	
 	// a fermer : fd_entree et fd_sortie.
 	
 	data->child_id = waitpid(0, &data->status, 0);
@@ -127,19 +135,6 @@ int	piping(t_vault *data)
 // 	}
 	return (0);
 }
-/*
-	{
-		close(data->pipe_ends[1]); // je ferme car j'écris rien
-		waitpid(data->pid1, NULL, 0); // j'attend que pid1 soit fini (avec le close)
-		printf("Salut, je récupère le message\n");
-		reception = read(data->pipe_ends[0], message_received, 31);
-		close(data->pipe_ends[0]);
-		if (reception == -1)
-			return ;
-		message_received[reception] = '\0';
-		printf("le message est : %s\n", message_received);
-	}
-*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -152,38 +147,6 @@ int	main(int argc, char **argv, char **envp)
 	data.argv = argv;
 	data.envp = envp;
 	data.nbr_args = argc - 3;
-//	dup_fds(&data);
-//	piping(&data);
-	exec_cmd(&data);
+	piping(&data);
 	return (0);
 }
-
-/*
-void	find_path(void)
-{
-	char *options;
-
-	options = ;
-	execve("/usr/bin/env", options, envp);
-	return (0);
-}
-*/
-
-// void	pipex(int fd1, int fd2)
-// {
-// 	int end[2];
-
-// 	pipe(end);
-// }
-
-/*
-int main(int argc, char **argv, char **envp)
-{
-	char *options[3] = {"ls", "-la", NULL};
-
-	(void)argc;
-	(void)argv;
-	execve("/usr/bin/ls", options, envp);
-	return (0);
-}
-*/
