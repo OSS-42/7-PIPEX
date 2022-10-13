@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:07:04 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/13 11:22:08 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/13 12:18:16 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ typedef struct s_vault
 	int		argc;
 	char	**envp;
 	pid_t	*pid;
-	pid_t	return_status1;
-	pid_t	return_status2;
+	int		child_id;
 	int		status;
 	int		*pipe_ends[2];
 	int		fd;

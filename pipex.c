@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/13 11:22:15 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/13 12:25:55 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	dup_fds(t_vault *data)
 	fd = open("test.txt", O_RDONLY);
 	if (!fd)
 		return ;
+	// considerer incrementation des pipes si plusieurs commandes
 	fd_in = dup2(fd, 0);
 	fd_out = dup2(data->pipe_ends[1], 1);
 	if (!fd_out || !fd_in)
@@ -70,51 +71,60 @@ int	piping(t_vault *data)
 		{
 			dup2 & pipe;
 			exec_cmd(data, y + 2);
+			exit (0);
 		}
 		y++;
 	}
-	y = 0;
-	while (waitpid(0, &data->status, 0))
+	x = 0;
+	while(x < data->nbr_args - 1)
+	{
+		close (data->pipe_ends[x][1]);
+		close (data->pipe_ends[x][0]);
+		x++;
+	}
+	// a fermer : fd_entree et fd_sortie.
 	
-
-	{
+	data->child_id = waitpid(0, &data->status, 0);
+	while (data->child_id != -1)
+		data->child_id = waitpid(0, &data->status, 0);
+	
 //		printf("#1 : OSS %d\n", getpid());
-		pid_val = ft_itoa(getpid());
-		close(data->pipe_ends[0]);
-		strcpy(secret, pid_val);
-		write(data->pipe_ends[1], secret, ft_strlen(secret));
-		close(data->pipe_ends[1]);
-		exit (1);
+// 		pid_val = ft_itoa(getpid());
+// 		close(data->pipe_ends[0]);
+// 		strcpy(secret, pid_val);
+// 		write(data->pipe_ends[1], secret, ft_strlen(secret));
+// 		close(data->pipe_ends[1]);
+// 		exit (1);
 //		exec_cmd(data);
-	}
-	else if (data->pid1 > 0)
-	{
-		data->pid2 = fork();
-		if (data->pid2 == -1)
-			return (0);
-		else if (data->pid2 == 0)
-		{
-			printf("#2 : OSS %d\n", getpid());
-			exit (2);
+	
+// 	else if (data->pid1 > 0)
+// 	{
+// 		data->pid2 = fork();
+// 		if (data->pid2 == -1)
+// 			return (0);
+// 		else if (data->pid2 == 0)
+// 		{
+// 			printf("#2 : OSS %d\n", getpid());
+// 			exit (2);
 //			exec_cmd(data);
-		}
-		else if (data->pid2 > 0)
-		{
-			printf("il y a 2 agents\n");
-			data->return_status1 = waitpid(data->pid1, &data->status_value1, 0);
-			data->return_status2 = waitpid(data->pid2, &data->status_value2, 0);
-			printf("voici le premier est OSS %d\n", data->return_status1);
-			if (WIFEXITED(data->status_value1))
-				printf("toujours en activité (%d)\n", WEXITSTATUS(data->status_value1));
-			else
-				printf("il a été terminé....\n");
-			printf("et le deuxième est OSS %d\n", data->return_status2);
-			if (WIFEXITED(data->status_value2))
-				printf("toujours en actitité (%d)\n", WEXITSTATUS(data->status_value2));
-			else
-				printf("il a été terminé....\n");
-		}
-	}
+// 		}
+// 		else if (data->pid2 > 0)
+// 		{
+// 			printf("il y a 2 agents\n");
+// 			data->return_status1 = waitpid(data->pid1, &data->status_value1, 0);
+// 			data->return_status2 = waitpid(data->pid2, &data->status_value2, 0);
+// 			printf("voici le premier est OSS %d\n", data->return_status1);
+// 			if (WIFEXITED(data->status_value1))
+// 				printf("toujours en activité (%d)\n", WEXITSTATUS(data->status_value1));
+// 			else
+// 				printf("il a été terminé....\n");
+// 			printf("et le deuxième est OSS %d\n", data->return_status2);
+// 			if (WIFEXITED(data->status_value2))
+// 				printf("toujours en actitité (%d)\n", WEXITSTATUS(data->status_value2));
+// 			else
+// 				printf("il a été terminé....\n");
+// 		}
+// 	}
 	return (0);
 }
 /*
