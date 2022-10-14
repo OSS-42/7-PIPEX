@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/14 11:00:49 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/14 16:58:32 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ void	find_prog(t_vault *data, int argv_id)
 	size_t	x;
 
 	x = 0;
+	check_argv(data);
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
+	check_options(data);
 	while (data->path_names[x])
 	{
 		data->cmd.name = ft_strjoin(data->path_names[x], "/");
 		data->cmd.name = ft_strjoin(data->cmd.name, data->cmd.options[0]);
+		fprintf(stderr, "Cmd path : %s\n", data->cmd.name);
 		if (access(data->cmd.name, F_OK | X_OK) == 0)
-		{
-//			printf("path for prog : %s - %s\n", data->path_names[x], data->cmd.name); // pour debug
 			execve(data->cmd.name, data->cmd.options, data->envp);
-		}
 		x++;
 	}
 	return ;
@@ -50,6 +50,7 @@ void	find_paths(t_vault *data)
 	data->path_names = ft_split(data->paths, ':');
 	slen = ft_strlen(data->path_names[0]);
 	data->path_names[0] = ft_substr(data->path_names[0], 5, slen);
-//	check_paths(data); //DEBUG
+	// il faut free data_pathname
+	check_paths(data); //DEBUG
 	return ;
 }

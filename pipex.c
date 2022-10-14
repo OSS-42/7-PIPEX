@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/14 11:02:48 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/14 17:00:42 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ void	close_pipe_ends(t_vault *data)
 		x++;
 	}
 	return ;
-}
-
-void	exec_cmd(t_vault *data, int y)
-{
-	find_prog(data, y);
 }
 
 int	dup_fds(t_vault *data, int y)
@@ -71,6 +66,8 @@ int	piping(t_vault *data)
 	y = 0;
 	while (x < data->nbr_cmd - 1)
 	{
+		data->pipe_ends[x] = malloc(sizeof(int) * 2);
+		//il faut free ce malloc.
 		if (pipe(data->pipe_ends[x]) == -1)
 			return (0);
 		x++;
@@ -85,9 +82,9 @@ int	piping(t_vault *data)
 			if (dup_fds(data, y) == 0)
 			{
 				close_pipe_ends(data);
-				exec_cmd(data, y + 2);
+				find_prog(data, y + 2);
 			}
-			exit (0);
+			free_and_exit(data);
 		}
 		y++;
 	}
@@ -95,14 +92,19 @@ int	piping(t_vault *data)
 	data->child_id = waitpid(0, &data->status, 0);
 	while (data->child_id != -1)
 		data->child_id = waitpid(0, &data->status, 0);
+	while (x < data->nbr_cmd - 1)
+	{
+		free(data->pipe_ends[x]);
+		x--;
+	}
 	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_vault data;
+	t_vault	data;
 
-	if (argc != 5)
+	if (argc < 5)
 		return (0);
 	data.paths = NULL;
 	data.argc = argc;

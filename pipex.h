@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:07:04 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/14 11:02:15 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/14 17:01:35 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,13 @@ typedef struct s_vault
 /***** Initialisation *****/
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
-void	exec_cmd(t_vault *data, int y);
+
+/***** Exiting *****/
+void	free_and_exit(t_vault *data);
 
 /***** POUR DEBUG *****/
 void	check_paths(t_vault *data);
+void	check_options(t_vault *data);
+void	check_argv(t_vault *data);
 
 #endif
