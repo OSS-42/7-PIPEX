@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/14 17:00:42 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/15 17:45:49 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	close_pipe_ends(t_vault *data)
 	{
 		close (data->pipe_ends[x][p_read]);
 		close (data->pipe_ends[x][p_write]);
+		free (data->pipe_ends[x]);
 		x++;
 	}
 	return ;
@@ -67,7 +68,6 @@ int	piping(t_vault *data)
 	while (x < data->nbr_cmd - 1)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
-		//il faut free ce malloc.
 		if (pipe(data->pipe_ends[x]) == -1)
 			return (0);
 		x++;
@@ -84,7 +84,7 @@ int	piping(t_vault *data)
 				close_pipe_ends(data);
 				find_prog(data, y + 2);
 			}
-			free_and_exit(data);
+			exit (0);
 		}
 		y++;
 	}
@@ -92,11 +92,6 @@ int	piping(t_vault *data)
 	data->child_id = waitpid(0, &data->status, 0);
 	while (data->child_id != -1)
 		data->child_id = waitpid(0, &data->status, 0);
-	while (x < data->nbr_cmd - 1)
-	{
-		free(data->pipe_ends[x]);
-		x--;
-	}
 	return (0);
 }
 
@@ -113,5 +108,6 @@ int	main(int argc, char **argv, char **envp)
 	data.nbr_cmd = argc - 3;
 	find_paths(&data);
 	piping(&data);
+	free_dbl_ptr((void **)data.path_names);
 	return (0);
 }

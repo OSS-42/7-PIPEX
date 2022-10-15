@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/14 16:58:32 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/15 17:57:51 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,15 @@ void	find_paths(t_vault *data)
 	{
 		if (ft_strnstr(data->envp[x], "PATH", 4) != NULL)
 		{
-			data->paths = ft_strdup(data->envp[x]);
+			data->paths = data->envp[x];
 			break ;
 		}
 		x++;
 	}
 	data->path_names = ft_split(data->paths, ':');
+//	free (data->paths);
 	slen = ft_strlen(data->path_names[0]);
 	data->path_names[0] = ft_substr(data->path_names[0], 5, slen);
-	// il faut free data_pathname
 	check_paths(data); //DEBUG
 	return ;
 }
