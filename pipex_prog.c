@@ -47,8 +47,7 @@ void	find_paths(t_vault *data)
 		}
 		x++;
 	}
-	data->path_names = ft_split(data->paths, ':');
-//	free (data->paths);
+	data->path_names = ft_split(data->paths, ':'); // free a effectuer ?
 	slen = ft_strlen(data->path_names[0]);
 	data->path_names[0] = ft_substr(data->path_names[0], 5, slen);
 	check_paths(data); //DEBUG
