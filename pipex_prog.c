@@ -26,7 +26,7 @@ void	find_prog(t_vault *data, int argv_id)
 			execve(data->cmd.name, data->cmd.options, data->envp);
 		x++;
 	}
-	check_error();
+	message("command not found", data->cmd.name, "", 0);
 	return ;
 }
 
@@ -42,7 +42,6 @@ void	find_paths(t_vault *data)
 		{
 			slen = ft_strlen(data->envp[x]);
 			data->paths = ft_substr(data->envp[x], 5, slen);
-			data->error_flag = 0;
 			break ;
 		}
 		x++;
@@ -50,5 +49,7 @@ void	find_paths(t_vault *data)
 	check_error();
 	data->path_names = ft_split(data->paths, ':');
 	free (data->paths);
+	if (!data->path_names)
+		message("unexpected error", "", "", 0);
 	return ;
 }

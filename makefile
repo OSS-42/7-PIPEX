@@ -20,9 +20,10 @@ DEF_COLOR = \033[0;39m
 NO_OF_FILES := $(words $(wildcard *.c))
 
 #****SOURCES****
-SRC = pipex.c\
-		pipex_utils.c\
-		pipex_prog.c
+SRC = pipex.c \
+		pipex_utils.c \
+		pipex_prog.c \
+		pipex.h
 
 #HEADER = push_swap.h
 

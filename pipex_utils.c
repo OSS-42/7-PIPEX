@@ -12,19 +12,20 @@
 
 #include "pipex.h"
 
-void	close_pipe_ends(t_vault *data)
+int	check_cmd(t_vault *data)
 {
-	int	x;
+	if (ft_strchr(data->cmd.options[0], '/') != NULL)
+		return (1);
+	return (0);
+}
 
-	x = 0;
-	while (x < data->nbr_cmd - 1)
-	{
-		close (data->pipe_ends[x][p_read]);
-		close (data->pipe_ends[x][p_write]);
-		free (data->pipe_ends[x]);
-		x++;
-	}
-	return ;
+int	message(char *str1, char *str2, char *str3, int error_code)
+{
+	ft_putstr_fd("pipex: ", 2);
+	ft_putstr_fd(str1, 2);
+	ft_putstr_fd(str2, 2);
+	ft_putendl_fd(str3, 2);
+	return (error_code);
 }
 
 int	check_error(void)
@@ -36,14 +37,22 @@ int	check_error(void)
 
 void	check_fd_in(t_vault *data)
 {
-	data->fd_in = open("infile", O_RDONLY);
+	char	*line;
+
+	data->fd_in = open(data->argv[1], O_RDONLY);
 	if (data->fd_in == -1)
 		check_error();
+	line = get_next_line(data->fd_in);
+	if (!line)
+		check_error();
+	close(data->fd_in);
+	data->fd_in = open(data->argv[1], O_RDONLY);
 }
 
 void	check_fd_out(t_vault *data)
 {
-	data->fd_out = open("outfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	data->fd_out = open(data->argv[data->argc - 1],
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (!data->fd_out)
 		check_error();
 }
@@ -87,3 +96,4 @@ void	check_argv(t_vault *data)
 	return ;
 }
 */
+

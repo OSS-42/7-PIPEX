@@ -12,6 +12,21 @@
 
 #include "pipex.h"
 
+void	close_pipe_ends(t_vault *data)
+{
+	int	x;
+
+	x = 0;
+	while (x < data->nbr_cmd - 1)
+	{
+		close (data->pipe_ends[x][p_read]);
+		close (data->pipe_ends[x][p_write]);
+		free (data->pipe_ends[x]);
+		x++;
+	}
+	return ;
+}
+
 int	dup_fds(t_vault *data, int y)
 {
 	if (y == 0)
@@ -81,6 +96,7 @@ int	piping(t_vault *data)
 int	main(int argc, char **argv, char **envp)
 {
 	t_vault	data;
+	int		last_exit_code;
 
 	if (argc < 5)
 		return (0);
@@ -91,7 +107,8 @@ int	main(int argc, char **argv, char **envp)
 	data.nbr_cmd = argc - 3;
 	data.error_flag = 0;
 	find_paths(&data);
-	piping(&data);
+	last_exit_code = piping(&data);
 	free_dbl_ptr((void **)data.path_names);
-	return (0);
+	// valider les free lors de la gestion des erreurs
+	return (last_exit_code);
 }
