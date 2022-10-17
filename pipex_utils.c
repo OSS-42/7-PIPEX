@@ -41,10 +41,10 @@ void	check_fd_in(t_vault *data)
 
 	data->fd_in = open(data->argv[1], O_RDONLY);
 	if (data->fd_in == -1)
-		check_error();
+		message("fd error", "", "", 0);
 	line = get_next_line(data->fd_in);
 	if (!line)
-		check_error();
+		message("fd empty", "", "", 0);
 	close(data->fd_in);
 	data->fd_in = open(data->argv[1], O_RDONLY);
 }
@@ -54,7 +54,7 @@ void	check_fd_out(t_vault *data)
 	data->fd_out = open(data->argv[data->argc - 1],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (!data->fd_out)
-		check_error();
+		message("fd error", "", "", 0);
 }
 /***** POUR DEBUG ****
 void	check_paths(t_vault *data)

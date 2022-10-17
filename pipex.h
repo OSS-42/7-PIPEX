@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 19:01:12 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/17 19:01:12 by ewurstei         ###   ########.fr       */
+/*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
+/*   Updated: 2022/10/17 19:18:06 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_vault
 }	t_vault;
 
 /***** Initialisation *****/
+void	init_vault(t_vault *data, int argc, char **argv, char **envp);
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
 

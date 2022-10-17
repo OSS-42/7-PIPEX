@@ -100,12 +100,8 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 5)
 		return (0);
-	data.paths = NULL;
-	data.argc = argc;
-	data.argv = argv;
-	data.envp = envp;
-	data.nbr_cmd = argc - 3;
-	data.error_flag = 0;
+
+	init_vault(&data, argc, argv, envp);
 	find_paths(&data);
 	last_exit_code = piping(&data);
 	free_dbl_ptr((void **)data.path_names);
