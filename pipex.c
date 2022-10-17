@@ -12,34 +12,14 @@
 
 #include "pipex.h"
 
-void	close_pipe_ends(t_vault *data)
-{
-	int	x;
-
-	x = 0;
-	while (x < data->nbr_cmd - 1)
-	{
-		close (data->pipe_ends[x][p_read]);
-		close (data->pipe_ends[x][p_write]);
-		free (data->pipe_ends[x]);
-		x++;
-	}
-	return ;
-}
-
 int	dup_fds(t_vault *data, int y)
 {
-	int		fd_in;
-	int		fd_out;
-
 	if (y == 0)
 	{
-		fd_in = open("test.txt", O_RDONLY);
-		if (fd_in == -1)
-			return (-1);
-		dup2(fd_in, STDIN_FILENO);
+		check_fd_in(data);
+		dup2(data->fd_in, STDIN_FILENO);
 		dup2(data->pipe_ends[y][p_write], STDOUT_FILENO);
-		close(fd_in);
+		close(data->fd_in);
 	}
 	else if (y < data->nbr_cmd - 1)
 	{
@@ -48,14 +28,32 @@ int	dup_fds(t_vault *data, int y)
 	}
 	else if (y == data->nbr_cmd - 1)
 	{
-		fd_out = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (!fd_out)
-			return (-1);
+		check_fd_out(data);
 		dup2(data->pipe_ends[y - 1][p_read], STDIN_FILENO);
-		dup2(fd_out, STDOUT_FILENO);
-		close (fd_out);
+		dup2(data->fd_out, STDOUT_FILENO);
+		close (data->fd_out);
 	}
 	return (0);
+}
+
+void	forking(t_vault *data, int y)
+{
+	while (y < data->nbr_cmd)
+	{
+		data->pid = fork();
+		if (data->pid == -1)
+			check_error();
+		else if (data->pid == 0)
+		{
+			if (dup_fds(data, y) == 0)
+			{
+				close_pipe_ends(data);
+				find_prog(data, y + 2);
+			}
+			exit (0);
+		}
+		y++;
+	}
 }
 
 int	piping(t_vault *data)
@@ -69,25 +67,10 @@ int	piping(t_vault *data)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
 		if (pipe(data->pipe_ends[x]) == -1)
-			return (0);
+			check_error();
 		x++;
 	}
-	while (y < data->nbr_cmd)
-	{
-		data->pid = fork();
-		if (data->pid == -1)
-			return (0);
-		else if (data->pid == 0)
-		{
-			if (dup_fds(data, y) == 0)
-			{
-				close_pipe_ends(data);
-				find_prog(data, y + 2);
-			}
-			exit (0);
-		}
-		y++;
-	}
+	forking(data, y);
 	close_pipe_ends(data);
 	data->child_id = waitpid(0, &data->status, 0);
 	while (data->child_id != -1)
@@ -106,6 +89,7 @@ int	main(int argc, char **argv, char **envp)
 	data.argv = argv;
 	data.envp = envp;
 	data.nbr_cmd = argc - 3;
+	data.error_flag = 0;
 	find_paths(&data);
 	piping(&data);
 	free_dbl_ptr((void **)data.path_names);

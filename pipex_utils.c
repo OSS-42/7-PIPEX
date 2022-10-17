@@ -12,14 +12,42 @@
 
 #include "pipex.h"
 
-void	free_and_exit(t_vault *data)
+void	close_pipe_ends(t_vault *data)
 {
-	free_dbl_ptr((void **)data->path_names);
-	free_dbl_ptr((void **)data->cmd.options);
-	exit(0);
+	int	x;
+
+	x = 0;
+	while (x < data->nbr_cmd - 1)
+	{
+		close (data->pipe_ends[x][p_read]);
+		close (data->pipe_ends[x][p_write]);
+		free (data->pipe_ends[x]);
+		x++;
+	}
+	return ;
 }
 
-/***** POUR DEBUG *****/
+int	check_error(void)
+{
+	if (errno != 0)
+		perror("Error");
+	return (errno);
+}
+
+void	check_fd_in(t_vault *data)
+{
+	data->fd_in = open("infile", O_RDONLY);
+	if (data->fd_in == -1)
+		check_error();
+}
+
+void	check_fd_out(t_vault *data)
+{
+	data->fd_out = open("outfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (!data->fd_out)
+		check_error();
+}
+/***** POUR DEBUG ****
 void	check_paths(t_vault *data)
 {
 	size_t	x;
@@ -58,3 +86,4 @@ void	check_argv(t_vault *data)
 	}
 	return ;
 }
+*/

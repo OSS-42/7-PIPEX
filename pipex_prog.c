@@ -17,18 +17,16 @@ void	find_prog(t_vault *data, int argv_id)
 	size_t	x;
 
 	x = 0;
-	check_argv(data);
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
-	check_options(data);
 	while (data->path_names[x])
 	{
 		data->cmd.name = ft_strjoin(data->path_names[x], "/");
 		data->cmd.name = ft_strjoin(data->cmd.name, data->cmd.options[0]);
-		fprintf(stderr, "Cmd path : %s\n", data->cmd.name);
 		if (access(data->cmd.name, F_OK | X_OK) == 0)
 			execve(data->cmd.name, data->cmd.options, data->envp);
 		x++;
 	}
+	check_error();
 	return ;
 }
 
@@ -40,16 +38,17 @@ void	find_paths(t_vault *data)
 	x = 0;
 	while (data->envp[x])
 	{
-		if (ft_strnstr(data->envp[x], "PATH", 4) != NULL)
+		if (ft_strnstr(data->envp[x], "PATH=", 5) != NULL)
 		{
-			data->paths = data->envp[x];
+			slen = ft_strlen(data->envp[x]);
+			data->paths = ft_substr(data->envp[x], 5, slen);
+			data->error_flag = 0;
 			break ;
 		}
 		x++;
 	}
-	data->path_names = ft_split(data->paths, ':'); // free a effectuer ?
-	slen = ft_strlen(data->path_names[0]);
-	data->path_names[0] = ft_substr(data->path_names[0], 5, slen);
-	check_paths(data); //DEBUG
+	check_error();
+	data->path_names = ft_split(data->paths, ':');
+	free (data->paths);
 	return ;
 }

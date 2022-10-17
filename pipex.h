@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <errno.h>
 # include "includes/libft/libft.h"
 
 enum	e_pipe_ends_name
@@ -45,16 +46,26 @@ typedef struct s_vault
 	int		child_id;
 	int		status;
 	int		*pipe_ends[2];
-	int		fd;
+	int		fd_in;
+	int		fd_out;
 	t_cmd	cmd;
+	int		error_flag;
 }	t_vault;
 
 /***** Initialisation *****/
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
 
+/***** Logique *****/
+int		piping(t_vault *data);
+void	forking(t_vault *data, int y);
+int		dup_fds(t_vault *data, int y);
+void	check_fd_in(t_vault *data);
+void	check_fd_out(t_vault *data);
+int		check_error(void);
+
 /***** Exiting *****/
-void	free_and_exit(t_vault *data);
+void	close_pipe_ends(t_vault *data);
 
 /***** POUR DEBUG *****/
 void	check_paths(t_vault *data);
