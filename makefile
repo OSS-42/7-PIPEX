@@ -1,6 +1,6 @@
 #****VARIABLES****
 NAME = pipex
-#NAME_BONUS = push_swap_bonus
+NAME_BONUS = pipex_bonus
 
 CC = gcc
 CFLAGS = -g -Wall -Werror -Wextra
@@ -28,10 +28,14 @@ SRC = pipex.c \
 
 #HEADER = pipex.h
 
-#SRC_BONUS = \
+SRC_BONUS = pipex_bonus.c \
+			pipex_utils_bonus.c \
+			pipex_prog_bonus.c \
+			pipex_io_bonus.c \
+			pipex_init_bonus.c
 
 OBJ = $(SRC:.c=.o) 
-#OBJ_BONUS = $(SRC_BONUS:.c=.o)
+OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 #.o: .c
 .c.o :
@@ -48,11 +52,11 @@ $(NAME):	$(DIR_LIBFT)/$(LIBFT) $(OBJ) $(SRC)
 $(DIR_LIBFT)/$(LIBFT):
 	make -C $(DIR_LIBFT)
 
-#$(NAME_BONUS): $(DIR_LIBFT)/$(LIBFT) $(OBJ_BONUS) $(SRC_BONUS)
-#	$(CC) $(CFLAGS) $(OBJ_BONUS) -o $(NAME_BONUS) $(DIR_LIBFT)$(LIBFT)
-#	@echo "$(LGREEN)Compilation complete !$(DEF_COLOR)"
+$(NAME_BONUS): $(DIR_LIBFT)/$(LIBFT) $(OBJ_BONUS) $(SRC_BONUS)
+	$(CC) $(CFLAGS) $(OBJ_BONUS) -o $(NAME_BONUS) $(DIR_LIBFT)$(LIBFT)
+	@echo "$(LGREEN)Software Compilation completed : $(NO_OF_FILES) files done !$(DEF_COLOR)"
 
-#bonus: $(DIR_LIBFT)/$(LIBFT) $(NAME_BONUS)
+bonus: $(DIR_LIBFT)/$(LIBFT) $(NAME_BONUS)
 
 #tests:	
 
@@ -60,14 +64,14 @@ $(DIR_LIBFT)/$(LIBFT):
 	
 clean:
 	$(RM) $(OBJ)
-#	$(RM) $(OBJ_BONUS)
+	$(RM) $(OBJ_BONUS)
 	make -C $(DIR_LIBFT) clean
 	@echo "$(LCYAN)Objects files cleaned !$(DEF_COLOR)"
 
 fclean:	clean
 	$(RM) $(DIR_LIBFT)$(LIBFT)
 	$(RM) $(NAME)
-#	$(RM) $(NAME_BONUS)
+	$(RM) $(NAME_BONUS)
 	@echo "$(LCYAN)Executables files cleaned !$(DEF_COLOR)"
 
 re:	fclean all
