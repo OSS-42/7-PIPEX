@@ -23,6 +23,7 @@ NO_OF_FILES := $(words $(wildcard *.c))
 SRC = pipex.c \
 		pipex_utils.c \
 		pipex_prog.c \
+		pipex_io.c \
 		pipex_init.c
 
 #HEADER = pipex.h

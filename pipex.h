@@ -49,7 +49,7 @@ typedef struct s_vault
 	int		fd_out;
 	t_cmd	cmd;
 	int		error_flag;
-	char 	*line;
+	char	*line;
 	int		**pipe_ends;
 }	t_vault;
 
@@ -60,7 +60,7 @@ void	find_prog(t_vault *data, int y);
 
 /***** Logique *****/
 int		piping(t_vault *data);
-void	forking(t_vault *data, int y);
+void	forking(t_vault *data);
 int		dup_fds(t_vault *data, int y);
 void	check_fd_in(t_vault *data);
 void	check_fd_out(t_vault *data);

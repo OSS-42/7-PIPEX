@@ -24,7 +24,8 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 	ft_putstr_fd("pipex: ", 2);
 	ft_putstr_fd(str1, 2);
 	ft_putendl_fd(str2, 2);
-	free_dbl_ptr((void **)data->cmd.options);
+	if (data->argc != 0)
+		free_dbl_ptr((void **)data->cmd.options);
 	return (error_code);
 }
 
@@ -95,4 +96,3 @@ void	check_argv(t_vault *data)
 	return ;
 }
 */
-
