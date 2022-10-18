@@ -18,13 +18,18 @@ void	find_prog(t_vault *data, int argv_id)
 
 	x = 0;
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
-	while (data->path_names[x])
+	if (access(data->cmd.options[0], F_OK | X_OK) == 0)
+		data->cmd.name = data->cmd.options[0];
+	else if (access(data->cmd.options[0], F_OK | X_OK) != 0)
 	{
-		data->cmd.name = ft_strjoin(data->path_names[x], "/");
-		data->cmd.name = ft_strjoin(data->cmd.name, data->cmd.options[0]);
-		if (access(data->cmd.name, F_OK | X_OK) == 0)
-			execve(data->cmd.name, data->cmd.options, data->envp);
-		x++;
+		while (data->path_names[x])
+		{
+			data->cmd.name = ft_strjoin(data->path_names[x], "/");
+			data->cmd.name = ft_strjoin(data->cmd.name, data->cmd.options[0]);
+			if (access(data->cmd.name, F_OK | X_OK) == 0)
+				execve(data->cmd.name, data->cmd.options, data->envp);
+			x++;
+		}
 	}
 	message("command not found", ": ", data->cmd.name, 0);
 }

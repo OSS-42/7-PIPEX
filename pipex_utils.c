@@ -45,6 +45,7 @@ void	check_fd_in(t_vault *data)
 	line = get_next_line(data->fd_in);
 	if (!line)
 		message("fd empty", "", "", 0);
+	free(line);
 	close(data->fd_in);
 	data->fd_in = open(data->argv[1], O_RDONLY);
 }
