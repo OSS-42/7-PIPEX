@@ -18,20 +18,25 @@ void	find_prog(t_vault *data, int argv_id)
 
 	x = 0;
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
+	if (!data->cmd.options)
+		exit_on_error(data, message(data, "unexpected error.", "", 0));
 	if (access(data->cmd.options[0], F_OK | X_OK) == 0)
 		data->cmd.name = data->cmd.options[0];
 	else if (access(data->cmd.options[0], F_OK | X_OK) != 0)
 	{
 		while (data->path_names[x])
 		{
-			data->cmd.name = ft_strjoin(data->path_names[x], "/");
-			data->cmd.name = ft_strjoin(data->cmd.name, data->cmd.options[0]);
+			data->cmd.path = ft_strjoin(data->path_names[x], "/");
+			data->cmd.name = ft_strjoin(data->cmd.path, data->cmd.options[0]);
 			if (access(data->cmd.name, F_OK | X_OK) == 0)
 				execve(data->cmd.name, data->cmd.options, data->envp);
+			free(data->cmd.name);
+			free(data->cmd.path);
 			x++;
 		}
 	}
-	message("command not found", ": ", data->cmd.name, 0);
+	exit_on_error(data, message(data, "command not found: ",
+			data->cmd.options[0], 0));
 }
 
 void	find_paths(t_vault *data)
@@ -40,7 +45,7 @@ void	find_paths(t_vault *data)
 	size_t	slen;
 
 	x = 0;
-	while (data->envp[x])
+	while (data->envp[x] && data->envp[x][0])
 	{
 		if (ft_strnstr(data->envp[x], "PATH=", 5) != NULL)
 		{
@@ -50,9 +55,8 @@ void	find_paths(t_vault *data)
 		}
 		x++;
 	}
-	check_error();
 	data->path_names = ft_split(data->paths, ':');
 	free (data->paths);
 	if (!data->path_names)
-		message("unexpected error", "", "", 0);
+		exit_on_error(data, message(data, "unexpected error.", "", 0));
 }

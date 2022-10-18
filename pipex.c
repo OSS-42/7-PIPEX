@@ -12,6 +12,14 @@
 
 #include "pipex.h"
 
+void	io_redirection(t_vault *data, int input, int output)
+{
+	if (dup2(input, STDIN_FILENO) == -1)
+		exit_on_error(data, 1);
+	if (dup2(output, STDOUT_FILENO) == -1)
+		exit_on_error(data, 1);
+}
+
 void	close_pipe_ends(t_vault *data)
 {
 	int	x;
@@ -32,20 +40,23 @@ int	dup_fds(t_vault *data, int y)
 	if (y == 0)
 	{
 		check_fd_in(data);
-		dup2(data->fd_in, STDIN_FILENO);
-		dup2(data->pipe_ends[y][p_write], STDOUT_FILENO);
+		io_redirection(data, data->fd_in, data->pipe_ends[y][p_write]);
+//		io_redirection(data, data->fd_in, STDIN_FILENO);
+//		io_redirection(data, data->pipe_ends[y][p_write], STDOUT_FILENO);
 		close(data->fd_in);
 	}
 	else if (y < data->nbr_cmd - 1)
 	{
-		dup2(data->pipe_ends[y - 1][p_read], STDIN_FILENO);
-		dup2(data->pipe_ends[y][p_write], STDOUT_FILENO);
+		io_redirection(data, data->pipe_ends[y - 1][p_read], data->pipe_ends[y][p_write]);
+//		io_redirection(data, data->pipe_ends[y - 1][p_read], STDIN_FILENO);
+//		io_redirection(data, data->pipe_ends[y][p_write], STDOUT_FILENO);
 	}
 	else if (y == data->nbr_cmd - 1)
 	{
 		check_fd_out(data);
-		dup2(data->pipe_ends[y - 1][p_read], STDIN_FILENO);
-		dup2(data->fd_out, STDOUT_FILENO);
+		io_redirection(data, data->pipe_ends[y - 1][p_read], data->fd_out);
+//		io_redirection(data, data->pipe_ends[y - 1][p_read], STDIN_FILENO);
+//		io_redirection(data, data->fd_out, STDOUT_FILENO);
 		close (data->fd_out);
 	}
 	return (0);
@@ -57,7 +68,7 @@ void	forking(t_vault *data, int y)
 	{
 		data->pid = fork();
 		if (data->pid == -1)
-			check_error();
+			exit_on_error(data, message(data, "PID creation error.", "", 0));
 		else if (data->pid == 0)
 		{
 			if (dup_fds(data, y) == 0)
@@ -82,7 +93,7 @@ int	piping(t_vault *data)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
 		if (pipe(data->pipe_ends[x]) == -1)
-			check_error();
+			exit_on_error(data, message(data, "pipe creation error.", "", 0));
 		x++;
 	}
 	forking(data, y);
@@ -99,12 +110,13 @@ int	main(int argc, char **argv, char **envp)
 	int		last_exit_code;
 
 	if (argc < 5)
-		return (0);
-
+		exit_on_error(&data, message(&data, "usage: ",
+				"./pipex file1 cmd1 cmd2 ... cmdn file2.", 0));
+	if (!envp || envp[0][0] == '\0')
+		exit_on_error(&data, message(&data, "unexpected error.", "", 0));
 	init_vault(&data, argc, argv, envp);
 	find_paths(&data);
 	last_exit_code = piping(&data);
 	free_dbl_ptr((void **)data.path_names);
-	// valider les free lors de la gestion des erreurs
 	return (last_exit_code);
 }

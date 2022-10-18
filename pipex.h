@@ -29,9 +29,9 @@ enum	e_pipe_ends_name
 
 typedef struct s_cmd
 {
+	char	*path;
 	char	*name;
 	char	**options;
-	int		id;
 }	t_cmd;
 
 typedef struct s_vault
@@ -50,6 +50,7 @@ typedef struct s_vault
 	int		fd_out;
 	t_cmd	cmd;
 	int		error_flag;
+	char 	*line;
 }	t_vault;
 
 /***** Initialisation *****/
@@ -64,8 +65,8 @@ int		dup_fds(t_vault *data, int y);
 void	check_fd_in(t_vault *data);
 void	check_fd_out(t_vault *data);
 int		check_cmd(t_vault *data);
-int		check_error(void);
-int		message(char *str1, char *str2, char *str3, int error_code);
+void	exit_on_error(t_vault *data, int error_code);
+int		message(t_vault *data, char *str1, char *str2, int error_code);
 
 /***** Exiting *****/
 void	close_pipe_ends(t_vault *data);

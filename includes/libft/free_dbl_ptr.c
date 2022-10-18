@@ -20,4 +20,5 @@ void	free_dbl_ptr(void **ptr)
 	while (ptr[++i])
 		free(ptr[i]);
 	free(ptr);
+	ptr = NULL;
 }

@@ -19,33 +19,30 @@ int	check_cmd(t_vault *data)
 	return (0);
 }
 
-int	message(char *str1, char *str2, char *str3, int error_code)
+int	message(t_vault *data, char *str1, char *str2, int error_code)
 {
 	ft_putstr_fd("pipex: ", 2);
 	ft_putstr_fd(str1, 2);
-	ft_putstr_fd(str2, 2);
-	ft_putendl_fd(str3, 2);
+	ft_putendl_fd(str2, 2);
+	free_dbl_ptr((void **)data->cmd.options);
 	return (error_code);
 }
 
-int	check_error(void)
+void	exit_on_error(t_vault *data, int error_code)
 {
-	if (errno != 0)
-		perror("Error");
-	return (errno);
+	free_dbl_ptr((void **)data->path_names);
+	exit (error_code);
 }
 
 void	check_fd_in(t_vault *data)
 {
-	char	*line;
-
 	data->fd_in = open(data->argv[1], O_RDONLY);
 	if (data->fd_in == -1)
-		message("fd error", "", "", 0);
-	line = get_next_line(data->fd_in);
-	if (!line)
-		message("fd empty", "", "", 0);
-	free(line);
+		message(data, "fd error.", "", 0);
+	data->line = get_next_line(data->fd_in);
+	if (!data->line)
+		message(data, "fd empty.", "", 0);
+	free(data->line);
 	close(data->fd_in);
 	data->fd_in = open(data->argv[1], O_RDONLY);
 }
@@ -55,8 +52,9 @@ void	check_fd_out(t_vault *data)
 	data->fd_out = open(data->argv[data->argc - 1],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (!data->fd_out)
-		message("fd error", "", "", 0);
+		message(data, "fd error.", "", 0);
 }
+
 /***** POUR DEBUG ****
 void	check_paths(t_vault *data)
 {
