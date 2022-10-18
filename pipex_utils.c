@@ -38,10 +38,10 @@ void	check_fd_in(t_vault *data)
 {
 	data->fd_in = open(data->argv[1], O_RDONLY);
 	if (data->fd_in == -1)
-		message(data, "fd error.", "", 0);
+		message(data, "FD error.", "", 0);
 	data->line = get_next_line(data->fd_in);
 	if (!data->line)
-		message(data, "fd empty.", "", 0);
+		message(data, "FD empty.", "", 0);
 	free(data->line);
 	close(data->fd_in);
 	data->fd_in = open(data->argv[1], O_RDONLY);
@@ -52,7 +52,7 @@ void	check_fd_out(t_vault *data)
 	data->fd_out = open(data->argv[data->argc - 1],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (!data->fd_out)
-		message(data, "fd error.", "", 0);
+		message(data, "FD error.", "", 0);
 }
 
 /***** POUR DEBUG ****

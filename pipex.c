@@ -25,13 +25,14 @@ void	close_pipe_ends(t_vault *data)
 	int	x;
 
 	x = 0;
-	while (x < data->nbr_cmd - 1)
+	while (x < data->nbr_cmd - 1 + 2)
 	{
-		close (data->pipe_ends[x][p_read]);
 		close (data->pipe_ends[x][p_write]);
+		close (data->pipe_ends[x][p_read]);
 		free (data->pipe_ends[x]);
 		x++;
 	}
+	free(data->pipe_ends);
 	return ;
 }
 
@@ -45,13 +46,13 @@ int	dup_fds(t_vault *data, int y)
 //		io_redirection(data, data->pipe_ends[y][p_write], STDOUT_FILENO);
 		close(data->fd_in);
 	}
-	else if (y < data->nbr_cmd - 1)
+	else if (y < data->nbr_cmd - 1 + 2)
 	{
 		io_redirection(data, data->pipe_ends[y - 1][p_read], data->pipe_ends[y][p_write]);
 //		io_redirection(data, data->pipe_ends[y - 1][p_read], STDIN_FILENO);
 //		io_redirection(data, data->pipe_ends[y][p_write], STDOUT_FILENO);
 	}
-	else if (y == data->nbr_cmd - 1)
+	else if (y == data->nbr_cmd - 1 + 2)
 	{
 		check_fd_out(data);
 		io_redirection(data, data->pipe_ends[y - 1][p_read], data->fd_out);
@@ -76,7 +77,7 @@ void	forking(t_vault *data, int y)
 				close_pipe_ends(data);
 				find_prog(data, y + 2);
 			}
-			exit (0);
+			exit_on_error(data, 0);
 		}
 		y++;
 	}
@@ -89,11 +90,12 @@ int	piping(t_vault *data)
 
 	x = 0;
 	y = 0;
-	while (x < data->nbr_cmd - 1)
+	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1 + 2));
+	while (x < data->nbr_cmd - 1 + 2)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
 		if (pipe(data->pipe_ends[x]) == -1)
-			exit_on_error(data, message(data, "pipe creation error.", "", 0));
+			exit_on_error(data, message(data, "Pipe creation error.", "", 0));
 		x++;
 	}
 	forking(data, y);
@@ -110,10 +112,10 @@ int	main(int argc, char **argv, char **envp)
 	int		last_exit_code;
 
 	if (argc < 5)
-		exit_on_error(&data, message(&data, "usage: ",
+		exit_on_error(&data, message(&data, "Usage: ",
 				"./pipex file1 cmd1 cmd2 ... cmdn file2.", 0));
 	if (!envp || envp[0][0] == '\0')
-		exit_on_error(&data, message(&data, "unexpected error.", "", 0));
+		exit_on_error(&data, message(&data, "Unexpected error.", "", 0));
 	init_vault(&data, argc, argv, envp);
 	find_paths(&data);
 	last_exit_code = piping(&data);

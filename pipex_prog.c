@@ -19,7 +19,7 @@ void	find_prog(t_vault *data, int argv_id)
 	x = 0;
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
 	if (!data->cmd.options)
-		exit_on_error(data, message(data, "unexpected error.", "", 0));
+		exit_on_error(data, message(data, "Unexpected error.", "", 0));
 	if (access(data->cmd.options[0], F_OK | X_OK) == 0)
 		data->cmd.name = data->cmd.options[0];
 	else if (access(data->cmd.options[0], F_OK | X_OK) != 0)
@@ -35,7 +35,7 @@ void	find_prog(t_vault *data, int argv_id)
 			x++;
 		}
 	}
-	exit_on_error(data, message(data, "command not found: ",
+	exit_on_error(data, message(data, "Command not found: ",
 			data->cmd.options[0], 0));
 }
 
@@ -58,5 +58,5 @@ void	find_paths(t_vault *data)
 	data->path_names = ft_split(data->paths, ':');
 	free (data->paths);
 	if (!data->path_names)
-		exit_on_error(data, message(data, "unexpected error.", "", 0));
+		exit_on_error(data, message(data, "Unexpected error.", "", 0));
 }

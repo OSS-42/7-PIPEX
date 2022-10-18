@@ -45,12 +45,12 @@ typedef struct s_vault
 	pid_t	pid;
 	int		child_id;
 	int		status;
-	int		*pipe_ends[2];
 	int		fd_in;
 	int		fd_out;
 	t_cmd	cmd;
 	int		error_flag;
 	char 	*line;
+	int		**pipe_ends;
 }	t_vault;
 
 /***** Initialisation *****/
