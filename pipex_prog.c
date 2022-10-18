@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/15 20:52:36 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/18 13:15:27 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,16 @@ void	find_prog(t_vault *data, int argv_id)
 	}
 	else if (access(data->cmd.options[0], F_OK | X_OK) != 0)
 	{
-		while (data->path_names[x++])
+		while (data->path_names[x])
 		{
 			data->cmd.path = ft_strjoin(data->path_names[x], "/");
 			data->cmd.name = ft_strjoin(data->cmd.path, data->cmd.options[0]);
 			if (access(data->cmd.name, F_OK | X_OK) == 0)
 				execve(data->cmd.name, data->cmd.options, data->envp);
-			free(data->cmd.name);
-			free(data->cmd.path);
+			else
+				free(data->cmd.name);
+				free(data->cmd.path);
+			x++;
 		}
 	}
 	exit_on_error(data, message(data, "Command not found: ",

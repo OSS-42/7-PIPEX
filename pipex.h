@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/17 19:18:06 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:57:22 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct s_vault
 	int		fd_out;
 	t_cmd	cmd;
 	int		error_flag;
-	char	*line;
 	int		**pipe_ends;
 }	t_vault;
 
