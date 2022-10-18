@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/18 12:57:22 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/18 13:25:11 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_vault
 void	init_vault(t_vault *data, int argc, char **argv, char **envp);
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
+void	cmd_path_check(t_vault *data);
 
 /***** Logique *****/
 int		piping(t_vault *data);
