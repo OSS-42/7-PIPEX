@@ -61,7 +61,7 @@ void	check_fd_out(t_vault *data)
 {
 	if (data->heredoc == 1)
 		data->fd_out = open(data->argv[data->argc - 1],
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		data->fd_out = open(data->argv[data->argc - 1],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
