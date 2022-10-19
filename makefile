@@ -28,11 +28,11 @@ SRC = pipex.c \
 
 #HEADER = pipex.h
 
-SRC_BONUS = pipex_bonus.c \
-			pipex_utils_bonus.c \
-			pipex_prog_bonus.c \
-			pipex_io_bonus.c \
-			pipex_init_bonus.c
+SRC_BONUS = bonus/pipex_bonus.c \
+			bonus/pipex_utils_bonus.c \
+			bonus/pipex_prog_bonus.c \
+			bonus/pipex_io_bonus.c \
+			bonus/pipex_init_bonus.c
 
 OBJ = $(SRC:.c=.o) 
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
@@ -75,3 +75,5 @@ fclean:	clean
 	@echo "$(LCYAN)Executables files cleaned !$(DEF_COLOR)"
 
 re:	fclean all
+
+.PHONY: all clean fclean re

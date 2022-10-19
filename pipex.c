@@ -77,7 +77,7 @@ int	main(int argc, char **argv, char **envp)
 	t_vault	data;
 	int		last_exit_code;
 
-	if (argc < 5)
+	if (argc != 5)
 	{
 		data.argc = 0;
 		message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 ... cmdn file2.", 0);
