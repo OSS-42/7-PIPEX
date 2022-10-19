@@ -27,24 +27,25 @@ void	detect_heredoc(t_vault *data)
 {
 	int		fd_tmp;
 	int		fd_stdin;
-	char	*line;
+	char	*p_line;
 
 	fd_tmp = open(".hd.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	fd_stdin = dup(STDIN_FILENO);
 	if (fd_stdin == -1)
-		exit_on_error(data, message(data, "FD error (heredoc).", "", 0));
-	line = "";
+		exit_on_error(data, message(data, "FD error (heredoc).", "", 9));
+	p_line = "";
 	while (1)
 	{
-		write(1, "hd> ", 4);
-		line = get_next_line(fd_stdin);
-		if (line == NULL)
+		ft_putstr_fd("hd> ", 1);
+		p_line = get_next_line(fd_stdin);
+		if (p_line == NULL)
 			break ;
-		if (!ft_strncmp(line, data->argv[2], ft_strlen(data->argv[2]) + 1))
+		if (ft_strlen(data->argv[2]) + 1 == ft_strlen(p_line)
+			&& !ft_strncmp(p_line, data->argv[2], ft_strlen(data->argv[2] + 1)))
 			close(fd_stdin);
 		else
-			ft_putstr_fd(line, fd_tmp);
-		free(line);
+			ft_putstr_fd(p_line, fd_tmp);
+		free(p_line);
 	}
 	close(fd_tmp);
 }
