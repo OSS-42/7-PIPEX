@@ -32,7 +32,7 @@ SRC_BONUS = bonus/pipex_bonus.c \
 			bonus/pipex_utils_bonus.c \
 			bonus/pipex_prog_bonus.c \
 			bonus/pipex_io_bonus.c \
-			bonus/pipex_init_bonus.c
+			bonus/pipex_hd_bonus.c
 
 OBJ = $(SRC:.c=.o) 
 OBJ_BONUS = $(SRC_BONUS:.c=.o)

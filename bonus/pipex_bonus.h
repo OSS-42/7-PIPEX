@@ -50,16 +50,19 @@ typedef struct s_vault
 	t_cmd	cmd;
 	int		error_flag;
 	int		**pipe_ends;
+	int		heredoc;
+	char	*limiter;
 }	t_vault;
 
 /***** Initialisation *****/
-void	init_vault(t_vault *data, int argc, char **argv, char **envp);
+void	launch_pipex(t_vault *data, char **argv, int argc, char **envp);
+void	check_env(t_vault *data, char **envp);
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
 void	cmd_path_check(t_vault *data);
 
 /***** Logique *****/
-int		piping(t_vault *data);
+void	piping(t_vault *data);
 void	forking(t_vault *data);
 int		dup_fds(t_vault *data, int y);
 void	check_fd_in(t_vault *data);
@@ -75,5 +78,8 @@ void	close_pipe_ends(t_vault *data);
 void	check_paths(t_vault *data);
 void	check_options(t_vault *data);
 void	check_argv(t_vault *data);
+
+/***** SPECIFIC BONUS *****/
+void	detect_heredoc(t_vault *data);
 
 #endif

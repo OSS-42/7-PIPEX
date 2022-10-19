@@ -43,15 +43,16 @@ void	forking(t_vault *data)
 			if (dup_fds(data, y) == 0)
 			{
 				close_pipe_ends(data);
-				find_prog(data, y + 2);
+				find_prog(data, y + 2 + data->heredoc);
 			}
 			exit_on_error(data, 0);
 		}
 		y++;
 	}
+	return ;
 }
 
-int	piping(t_vault *data)
+void	piping(t_vault *data)
 {
 	int		x;
 
@@ -69,29 +70,48 @@ int	piping(t_vault *data)
 	data->child_id = waitpid(0, &data->status, 0);
 	while (data->child_id != -1)
 		data->child_id = waitpid(0, &data->status, 0);
-	return (0);
+	if (data->heredoc == 1)
+		unlink(".hd.tmp");
+	return ;
+}
+
+void	launch_pipex(t_vault *data, char **argv, int argc, char **envp)
+{
+	data->paths = NULL;
+	data->argc = argc;
+	data->argv = argv;
+	data->envp = envp;
+	data->nbr_cmd = argc - 3 - data->heredoc;
+	data->error_flag = 0;
+	data->fd_in = -1;
+	data->fd_out = -1;
+	find_paths(data);
+	piping(data);
+	free_dbl_ptr((void **)data->path_names);
+	return ;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_vault	data;
-	int		last_exit_code;
 
-	if (argc < 5)
+	data.heredoc = 0;
+	check_env(&data, envp);
+	if (argc >= 5)
+	{
+		if (!ft_strncmp(argv[1], "here_doc", 9))
+		{
+			data.heredoc = 1;
+			launch_pipex(&data, argv, argc, envp);
+		}
+		else
+			launch_pipex(&data, argv, argc, envp);
+	}
+	else
 	{
 		data.argc = 0;
 		message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 ... cmdn file2.", 0);
 		return (0);
 	}
-	if (!envp || envp[0][0] == '\0')
-	{
-		data.argc = 0;
-		message(&data, "Unexpected error.", "", 0);
-		return (0);
-	}
-	init_vault(&data, argc, argv, envp);
-	find_paths(&data);
-	last_exit_code = piping(&data);
-	free_dbl_ptr((void **)data.path_names);
-	return (last_exit_code);
+	return (0);
 }

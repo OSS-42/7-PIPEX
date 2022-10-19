@@ -26,28 +26,44 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 	ft_putendl_fd(str2, 2);
 	if (data->argc != 0 && data->fd_in != -1 && data->fd_out != -1)
 		free_dbl_ptr((void **)data->cmd.options);
+	if (data->fd_in == -1 && data->fd_out == -1)
+		free(data->pipe_ends);
 	return (error_code);
 }
 
 void	exit_on_error(t_vault *data, int error_code)
 {
 	free_dbl_ptr((void **)data->path_names);
-	free_dbl_ptr((void **)data->pipe_ends);
+	if (data->heredoc == 1)
+		unlink(".hd.tmp");
 	exit (error_code);
 }
 
 void	check_fd_in(t_vault *data)
 {
-	data->fd_in = open(data->argv[1], O_RDONLY);
+	if (data->heredoc == 1)
+	{
+		detect_heredoc(data);
+		data->fd_in = open(".hd.tmp", O_RDONLY);
+	}
+	else
+		data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 	if (data->fd_in == -1)
 		exit_on_error(data, message(data, "FD error.", "", 0));
 	close(data->fd_in);
-	data->fd_in = open(data->argv[1], O_RDONLY);
+	if (data->heredoc == 1)
+		data->fd_in = open(".hd.tmp", O_RDONLY);
+	else
+		data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 }
 
 void	check_fd_out(t_vault *data)
 {
-	data->fd_out = open(data->argv[data->argc - 1],
+	if (data->heredoc == 1)
+		data->fd_out = open(data->argv[data->argc - 1],
+			O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		data->fd_out = open(data->argv[data->argc - 1],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data->fd_out == -1)
 		exit_on_error(data, message(data, "FD error.", "", 0));

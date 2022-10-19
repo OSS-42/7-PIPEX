@@ -80,7 +80,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5)
 	{
 		data.argc = 0;
-		message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 ... cmdn file2.", 0);
+		message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 file2.", 0);
 		return (0);
 	}
 	if (!envp || envp[0][0] == '\0')
