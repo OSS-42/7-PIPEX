@@ -20,4 +20,6 @@ void	init_vault(t_vault *data, int argc, char **argv, char **envp)
 	data->envp = envp;
 	data->nbr_cmd = argc - 3;
 	data->error_flag = 0;
+	data->fd_in = -1;
+	data->fd_out = -1;
 }

@@ -45,7 +45,7 @@ void	find_prog(t_vault *data, int argv_id)
 	else if (access(data->cmd.options[0], F_OK | X_OK) != 0)
 		cmd_path_check(data);
 	exit_on_error(data, message(data, "Command not found: ",
-			data->cmd.options[0], 0));
+			data->cmd.options[0], 8));
 }
 
 void	find_paths(t_vault *data)

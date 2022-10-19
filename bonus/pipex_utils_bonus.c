@@ -24,10 +24,10 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 	ft_putstr_fd("pipex: ", 2);
 	ft_putstr_fd(str1, 2);
 	ft_putendl_fd(str2, 2);
-	if (data->argc != 0 && data->fd_in != -1 && data->fd_out != -1)
+	if (error_code == 9)
+		close_pipe_ends(data);
+	if (error_code == 8)
 		free_dbl_ptr((void **)data->cmd.options);
-	if (data->fd_in == -1 && data->fd_out == -1)
-		free(data->pipe_ends);
 	return (error_code);
 }
 
@@ -49,7 +49,7 @@ void	check_fd_in(t_vault *data)
 	else
 		data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 	if (data->fd_in == -1)
-		exit_on_error(data, message(data, "FD error.", "", 0));
+		exit_on_error(data, message(data, "FD error.", "", 9));
 	close(data->fd_in);
 	if (data->heredoc == 1)
 		data->fd_in = open(".hd.tmp", O_RDONLY);
@@ -61,12 +61,12 @@ void	check_fd_out(t_vault *data)
 {
 	if (data->heredoc == 1)
 		data->fd_out = open(data->argv[data->argc - 1],
-			O_WRONLY | O_CREAT | O_APPEND, 0644);
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		data->fd_out = open(data->argv[data->argc - 1],
-			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data->fd_out == -1)
-		exit_on_error(data, message(data, "FD error.", "", 0));
+		exit_on_error(data, message(data, "FD error.", "", 9));
 }
 
 /***** POUR DEBUG ****

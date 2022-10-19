@@ -45,7 +45,8 @@ void	forking(t_vault *data)
 				close_pipe_ends(data);
 				find_prog(data, y + 2);
 			}
-			exit_on_error(data, 0);
+			else
+				exit_on_error(data, message(data, "FD error.", "", 9));
 		}
 		y++;
 	}
@@ -53,10 +54,10 @@ void	forking(t_vault *data)
 
 int	piping(t_vault *data)
 {
-	int		x;
+	int	x;
 
 	x = 0;
-	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1));
+	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1) + 1);
 	while (x < data->nbr_cmd - 1)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
@@ -77,16 +78,15 @@ int	main(int argc, char **argv, char **envp)
 	t_vault	data;
 	int		last_exit_code;
 
-	if (argc != 5)
+	if ((argc != 5) || (!envp || envp[0][0] == '\0'))
 	{
 		data.argc = 0;
-		message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 file2.", 0);
-		return (0);
-	}
-	if (!envp || envp[0][0] == '\0')
-	{
-		data.argc = 0;
-		message(&data, "Unexpected error.", "", 0);
+		data.fd_in = -1;
+		data.fd_out = -1;
+		if (argc != 5)
+			message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 file2.", 0);
+		else
+			message(&data, "Unexpected error.", "", 0);
 		return (0);
 	}
 	init_vault(&data, argc, argv, envp);

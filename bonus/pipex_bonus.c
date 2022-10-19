@@ -45,7 +45,7 @@ void	forking(t_vault *data)
 				close_pipe_ends(data);
 				find_prog(data, y + 2 + data->heredoc);
 			}
-			exit_on_error(data, 0);
+			exit_on_error(data, message(data, "FD error.", "", 9));
 		}
 		y++;
 	}
@@ -57,7 +57,7 @@ void	piping(t_vault *data)
 	int		x;
 
 	x = 0;
-	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1));
+	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1) + 1);
 	while (x < data->nbr_cmd - 1)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
