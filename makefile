@@ -17,8 +17,10 @@ OBJS_BONUS = $(patsubst $(D_SRC_BONUS)%.c,$(D_OBJ_BONUS)%.o,$(SRCS_BONUS))
 OK_STRING = "[OK]"
 ERROR_STRING = "[ERROR]"
 WARN_STRING = "[WARNING]"
-COMP_STRING = "Compiling"
+COMP_STRING = "Generating"
+CLEAN_STRING = "Cleaning"
 
+NO_OF_FILES := $(words $(wildcard $(D_SRC)*.c))
 
 #****COLORS****
 LRED = \033[91m
@@ -45,6 +47,38 @@ RESULT=$$?; \
 	exit $$RESULT
 endef
 
+define cleaning
+printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
+define fcleaning
+printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Filess" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
 #****SOURCES****
 SRCS = src/pipex.c \
 		src/pipex_utils.c \
@@ -60,9 +94,6 @@ SRCS_BONUS = src_bonus/pipex_bonus.c \
 			src_bonus/pipex_io_bonus.c \
 			src_bonus/pipex_hd_bonus.c
 
-#.c.o :
-#	@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
-
 #$(V).SILENT:
 
 all:	$(D_LIBFT)/$(LIBFT) $(NAME)
@@ -70,7 +101,7 @@ all:	$(D_LIBFT)/$(LIBFT) $(NAME)
 $(NAME):	$(OBJS) $(D_LIBFT)/$(LIBFT)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(D_LIBFT)$(LIBFT)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
-	@echo "$(LGREEN)Software Compilation completed !$(DEF_COLOR)"
+	@echo "$(LGREEN)Software Compilation completed ...$(NO_OF_FILES) files done !$(DEF_COLOR)"
 
 $(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c
 		@mkdir -p $(D_OBJ)
@@ -95,16 +126,14 @@ bonus: $(D_LIBFT)/$(LIBFT) $(NAME_BONUS)
 #btests : bonus
 	
 clean:
-	$(RM) $(D_OBJ)
-	$(RM) $(D_OBJ_BONUS)
-	$(MAKE) -C $(D_LIBFT) clean
-	@echo "$(LCYAN)Objects files cleaned !$(DEF_COLOR)"
+	@$(call cleaning, $(RM) $(D_OBJ))
+	@$(RM) $(D_OBJ_BONUS)
+	@$(MAKE) --no-print-directory -C $(D_LIBFT) clean
 
 fclean:	clean
-	$(MAKE) -C $(D_LIBFT) fclean
-	$(RM) $(NAME)
-	$(RM) $(NAME_BONUS)
-	@echo "$(LCYAN)Executables files cleaned !$(DEF_COLOR)"
+	@$(call fcleaning, $(RM) $(NAME))
+	@$(RM) $(NAME_BONUS)
+	@$(MAKE) --no-print-directory -C $(D_LIBFT) fclean
 
 re:	fclean all
 
