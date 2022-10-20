@@ -12,8 +12,11 @@ OBJS = $(patsubst $(D_SRC)%.c,$(D_OBJ)%.o,$(SRCS))
 OK_STRING = "[OK]"
 ERROR_STRING = "[ERROR]"
 WARN_STRING = "[WARNING]"
-COMP_STRING = "Compiling"
+COMP_STRING = "Generating"
+CLEAN_STRING = "Cleaning"
 ARCH_STRING = "Archiving"
+
+FCLEAN = 0
 
 #****COLORS****
 LRED = \033[91m
@@ -36,6 +39,54 @@ RESULT=$$?; \
 			printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
 	else \
 		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
+define cleaning
+printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Objects Files & Directories$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Objects Files & Directories" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Objects Files & Directories" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Objects Files & Directories" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
+define fcleaning
+printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Executable Files$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Executable Files" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Executable Filess" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) LIBFT Executable Files" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
+define archiving
+printf "%b" "$(LCYAN)$(ARCH_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(ARCH_STRING)$(LMAGENTA) $@" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(ARCH_STRING)$(LMAGENTA) $@" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(ARCH_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
 	fi; \
 	cat $@.log; \
 	rm -f $@.log; \
@@ -95,7 +146,7 @@ SRCS = \
 all:	$(NAME)
 
 $(NAME): $(OBJS)
-	@$(call run_and_test, $(AR) $@ $(OBJS))
+	@$(call archiving, $(AR) $@ $(OBJS))
 	@echo "$(LGREEN)LIBFT completed... $(NO_OF_FILES) files done !$(DEF_COLOR)"
 
 $(OBJS) : $(D_OBJ)%.o : $(D_SRC)%.c
@@ -103,10 +154,10 @@ $(OBJS) : $(D_OBJ)%.o : $(D_SRC)%.c
 	@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
 clean:
-	@$(RM) $(D_OBJ)
+	@$(call cleaning, $(RM) $(D_OBJ));
 
 fclean: clean
-	@$(RM) $(NAME)
+	@$(call fcleaning, $(RM) $(NAME))
 
 re: fclean all
 
