@@ -4,13 +4,13 @@ NAME_BONUS = pipex_bonus
 
 CC = gcc
 CFLAGS = -g -Wall -Werror -Wextra
-RM = rm -f
+RM = rm -rf
 LIBFT = libft.a
 D_LIBFT = includes/libft/
 D_SRC = src/
 D_SRC_BONUS = src_bonus/
-D_OBJ = objets/
-D_OBJ_BONUS = objets_bonus/
+D_OBJ = obj/
+D_OBJ_BONUS = obj_bonus/
 OBJS = $(patsubst $(D_SRC)%.c,$(D_OBJ)%.o,$(SRCS))
 OBJS_BONUS = $(patsubst $(D_SRC_BONUS)%.c,$(D_OBJ_BONUS)%.o,$(SRCS_BONUS))
 
@@ -77,7 +77,7 @@ $(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
 $(D_LIBFT)/$(LIBFT):
-	@make -C $(D_LIBFT)
+	@$(MAKE) -C $(D_LIBFT)
 
 $(NAME_BONUS): $(OBJS_BONUS) $(D_LIBFT)/$(LIBFT)
 	@$(CC) $(CFLAGS) -o $(OBJS_BONUS) $(D_LIBFT)$(LIBFT)
@@ -95,14 +95,13 @@ bonus: $(D_LIBFT)/$(LIBFT) $(NAME_BONUS)
 #btests : bonus
 	
 clean:
-	$(RM) $(OBJS)
-	$(RM) $(OBJS_BONUS)
+	$(RM) $(D_OBJ)
+	$(RM) $(D_OBJ_BONUS)
 	$(MAKE) -C $(D_LIBFT) clean
 	@echo "$(LCYAN)Objects files cleaned !$(DEF_COLOR)"
 
 fclean:	clean
 	$(MAKE) -C $(D_LIBFT) fclean
-	$(RM) $(DIR_LIBFT)$(LIBFT)
 	$(RM) $(NAME)
 	$(RM) $(NAME_BONUS)
 	@echo "$(LCYAN)Executables files cleaned !$(DEF_COLOR)"
