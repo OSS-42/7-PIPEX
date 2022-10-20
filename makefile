@@ -6,8 +6,19 @@ CC = gcc
 CFLAGS = -g -Wall -Werror -Wextra
 RM = rm -f
 LIBFT = libft.a
-DIR_LIBFT = includes/libft/
-DIR_BONUS = bonus/
+D_LIBFT = includes/libft/
+D_SRC = src/
+D_SRC_BONUS = src_bonus/
+D_OBJ = objets/
+D_OBJ_BONUS = objets_bonus/
+OBJS = $(patsubst $(D_SRC)%.c,$(D_OBJ)%.o,$(SRCS))
+OBJS_BONUS = $(patsubst $(D_SRC_BONUS)%.c,$(D_OBJ_BONUS)%.o,$(SRCS_BONUS))
+
+OK_STRING = "[OK]"
+ERROR_STRING = "[ERROR]"
+WARN_STRING = "[WARNING]"
+COMP_STRING = "Compiling"
+
 
 #****COLORS****
 LRED = \033[91m
@@ -17,58 +28,80 @@ LMAGENTA = \033[95m
 LCYAN = \033[96m
 DEF_COLOR = \033[0;39m
 
-NO_OF_FILES := $(words $(wildcard *.c))
+#****MAKEUP RULE****
+define run_and_test
+printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
 
 #****SOURCES****
-SRC = pipex.c \
-		pipex_utils.c \
-		pipex_prog.c \
-		pipex_io.c \
-		pipex_init.c
+SRCS = src/pipex.c \
+		src/pipex_utils.c \
+		src/pipex_prog.c \
+		src/pipex_io.c \
+		src/pipex_init.c
 
 #HEADER = pipex.h
 
-SRC_BONUS = bonus/pipex_bonus.c \
-			bonus/pipex_utils_bonus.c \
-			bonus/pipex_prog_bonus.c \
-			bonus/pipex_io_bonus.c \
-			bonus/pipex_hd_bonus.c
+SRCS_BONUS = src_bonus/pipex_bonus.c \
+			src_bonus/pipex_utils_bonus.c \
+			src_bonus/pipex_prog_bonus.c \
+			src_bonus/pipex_io_bonus.c \
+			src_bonus/pipex_hd_bonus.c
 
-OBJ = $(SRC:.c=.o) 
-OBJ_BONUS = $(SRC_BONUS:.c=.o)
-
-#.o: .c
-.c.o :
-	$(CC) $(CFLAGS) -c $< -o $@
+#.c.o :
+#	@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
 #$(V).SILENT:
 
-all:	$(NAME)
+all:	$(D_LIBFT)/$(LIBFT) $(NAME)
 
-$(NAME):	$(DIR_LIBFT)/$(LIBFT) $(OBJ) $(SRC)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(DIR_LIBFT)$(LIBFT)
-	@echo "$(LGREEN)Software Compilation completed : $(NO_OF_FILES) files done !$(DEF_COLOR)"
+$(NAME):	$(OBJS) $(D_LIBFT)/$(LIBFT)
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(D_LIBFT)$(LIBFT)
+	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
+	@echo "$(LGREEN)Software Compilation completed !$(DEF_COLOR)"
 
-$(DIR_LIBFT)/$(LIBFT):
-	make -C $(DIR_LIBFT)
+$(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c
+		@mkdir -p $(D_OBJ)
+		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
-$(NAME_BONUS): $(DIR_LIBFT)/$(LIBFT) $(OBJ_BONUS) $(SRC_BONUS)
-	$(CC) $(CFLAGS) $(OBJ_BONUS) -o $(NAME_BONUS) $(DIR_LIBFT)$(LIBFT)
-	@echo "$(LGREEN)Software Compilation completed : $(NO_OF_FILES) files done !$(DEF_COLOR)"
+$(D_LIBFT)/$(LIBFT):
+	@make -C $(D_LIBFT)
 
-bonus: $(DIR_LIBFT)/$(LIBFT) $(NAME_BONUS)
+$(NAME_BONUS): $(OBJS_BONUS) $(D_LIBFT)/$(LIBFT)
+	@$(CC) $(CFLAGS) -o $(OBJS_BONUS) $(D_LIBFT)$(LIBFT)
+	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
+	@echo "$(LGREEN)Software Compilation completed !$(DEF_COLOR)"
+
+$(OBJ_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c
+		@mkdir -p $(D_OBJ_BONUS)
+		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
+
+bonus: $(D_LIBFT)/$(LIBFT) $(NAME_BONUS)
 
 #tests:	
 
 #btests : bonus
 	
 clean:
-	$(RM) $(OBJ)
-	$(RM) $(OBJ_BONUS)
-	make -C $(DIR_LIBFT) clean
+	$(RM) $(OBJS)
+	$(RM) $(OBJS_BONUS)
+	$(MAKE) -C $(D_LIBFT) clean
 	@echo "$(LCYAN)Objects files cleaned !$(DEF_COLOR)"
 
 fclean:	clean
+	$(MAKE) -C $(D_LIBFT) fclean
 	$(RM) $(DIR_LIBFT)$(LIBFT)
 	$(RM) $(NAME)
 	$(RM) $(NAME_BONUS)

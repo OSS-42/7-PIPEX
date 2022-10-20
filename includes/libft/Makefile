@@ -1,4 +1,15 @@
+#****VARIABLES****
 NAME = libft.a
+
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra -c #-I -nostartfiles
+RM = rm -f
+AR = ar rcs
+
+OK_STRING = "[OK]"
+ERROR_STRING = "[ERROR]"
+WARN_STRING = "[WARNING]"
+COMP_STRING = "Compiling"
 
 #****COLORS****
 LRED = \033[91m
@@ -10,6 +21,24 @@ DEF_COLOR = \033[0;39m
 
 NO_OF_FILES := $(words $(wildcard *.c))
 
+#****MAKEUP RULE****
+define run_and_test
+printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"; \
+$(1) 2> $@.log; \
+RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+	elif [ -s $@.log ]; then \
+			printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+	else \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+	fi; \
+	cat $@.log; \
+	rm -f $@.log; \
+	exit $$RESULT
+endef
+
+#****SOURCES****
 LIBCFUN = \
 		ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 		ft_strlen.c ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c \
@@ -22,21 +51,19 @@ LIBCFUN = \
 		ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 		get_next_line.c get_next_line_utils.c free_dbl_ptr.c ft_atolong.c
 
-CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -c #-I -nostartfiles
-
-RM = rm -f
-
-AR = ar rcs
 
 OBJFUN = $(LIBCFUN:.c=.o)
+
+.c.o :
+	@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
 all:	$(NAME)
 
 $(NAME): $(OBJFUN)
 	@$(CC) $(CFLAGS) $(LIBCFUN)
 	@$(AR) $(NAME) $(OBJFUN)
+	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
 	@echo "$(LGREEN)LIBFT completed... $(NO_OF_FILES) files done !$(DEF_COLOR)"
 
 clean:
