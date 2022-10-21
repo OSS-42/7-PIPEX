@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"pipex_bonus.h": "c",
-		"pipex.h": "c"
+		"pipex.h": "c",
+		"*.a": "c"
 	}
 }
