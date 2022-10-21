@@ -6,6 +6,8 @@ CC = gcc
 CFLAGS = -g -Wall -Werror -Wextra
 RM = rm -rf
 LIBFT = libft.a
+HEADER = includes/pipex.h
+HEADER_BONUS = includes/pipex_bonus.h
 D_LIBFT = includes/libft/
 D_SRC = src/
 D_SRC_BONUS = src_bonus/
@@ -86,8 +88,6 @@ SRCS = src/pipex.c \
 		src/pipex_io.c \
 		src/pipex_init.c
 
-#HEADER = pipex.h
-
 SRCS_BONUS = src_bonus/pipex_bonus.c \
 			src_bonus/pipex_utils_bonus.c \
 			src_bonus/pipex_prog_bonus.c \
@@ -103,7 +103,7 @@ $(NAME):	$(OBJS)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
 	@echo "$(LGREEN)Software Compilation completed ...$(NO_OF_FILES) files done !$(DEF_COLOR)"
 
-$(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c
+$(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c $(HEADER)
 		@mkdir -p $(D_OBJ)
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
@@ -115,7 +115,7 @@ $(NAME_BONUS): $(OBJS_BONUS)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
 	@echo "$(LGREEN)Software Compilation completed !$(DEF_COLOR)"
 
-$(OBJS_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c
+$(OBJS_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c $(HEADER_BONUS)
 		@mkdir -p $(D_OBJ_BONUS)
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 

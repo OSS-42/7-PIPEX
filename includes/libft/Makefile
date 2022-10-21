@@ -7,6 +7,7 @@ RM = rm -rf
 AR = ar rcs
 D_OBJ = obj/
 D_SRC = src/
+HEADER = includes/libft.h
 OBJS = $(patsubst $(D_SRC)%.c,$(D_OBJ)%.o,$(SRCS))
 
 OK_STRING = "[OK]"
@@ -149,7 +150,7 @@ $(NAME): $(OBJS)
 	@$(call archiving, $(AR) $@ $(OBJS))
 	@echo "$(LGREEN)LIBFT completed... $(NO_OF_FILES) files done !$(DEF_COLOR)"
 
-$(OBJS) : $(D_OBJ)%.o : $(D_SRC)%.c
+$(OBJS) : $(D_OBJ)%.o : $(D_SRC)%.c $(HEADER)
 	@mkdir -p $(D_OBJ)
 	@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
