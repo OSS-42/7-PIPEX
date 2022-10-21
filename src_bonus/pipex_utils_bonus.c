@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 20:17:51 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/06 20:17:51 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/21 10:00:00 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ void	exit_on_error(t_vault *data, int error_code)
 void	check_fd_in(t_vault *data)
 {
 	if (data->heredoc == 1)
-	{
-		detect_heredoc(data);
 		data->fd_in = open(".hd.tmp", O_RDONLY);
-	}
 	else
 		data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 	if (data->fd_in == -1)

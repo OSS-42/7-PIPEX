@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/18 15:42:22 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/21 10:07:35 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "libft/libft.h"
+# include "libft/includes/libft.h"
 
 enum	e_pipe_ends_name
 {
@@ -52,6 +52,7 @@ typedef struct s_vault
 	int		**pipe_ends;
 	int		heredoc;
 	char	*limiter;
+	int		end_hd;
 }	t_vault;
 
 /***** Initialisation *****/

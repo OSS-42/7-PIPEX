@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/15 17:45:49 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/21 10:07:50 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	launch_pipex(t_vault *data, char **argv, int argc, char **envp)
 	data->fd_in = -1;
 	data->fd_out = -1;
 	find_paths(data);
+	if (data->heredoc == 1)
+		detect_heredoc(data);
 	piping(data);
 	free_dbl_ptr((void **)data->path_names);
 	return ;
@@ -96,16 +98,13 @@ int	main(int argc, char **argv, char **envp)
 	t_vault	data;
 
 	data.heredoc = 0;
+	data.end_hd = 0;
 	check_env(&data, envp);
 	if (argc >= 5)
 	{
 		if (!ft_strncmp(argv[1], "here_doc", 9))
-		{
 			data.heredoc = 1;
-			launch_pipex(&data, argv, argc, envp);
-		}
-		else
-			launch_pipex(&data, argv, argc, envp);
+		launch_pipex(&data, argv, argc, envp);
 	}
 	else
 	{

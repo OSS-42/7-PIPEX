@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 20:59:17 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/18 20:59:17 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/21 10:08:27 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	detect_heredoc(t_vault *data)
 	if (fd_stdin == -1)
 		exit_on_error(data, message(data, "FD error (heredoc).", "", 9));
 	p_line = "";
-	while (1)
+	while (data->end_hd == 0)
 	{
 		ft_putstr_fd("hd> ", 1);
 		p_line = get_next_line(fd_stdin);
@@ -42,10 +42,11 @@ void	detect_heredoc(t_vault *data)
 			break ;
 		if (ft_strlen(data->argv[2]) + 1 == ft_strlen(p_line)
 			&& !ft_strncmp(p_line, data->argv[2], ft_strlen(data->argv[2] + 1)))
-			close(fd_stdin);
+			data->end_hd = 1;
 		else
 			ft_putstr_fd(p_line, fd_tmp);
 		free(p_line);
 	}
+	close(fd_stdin);
 	close(fd_tmp);
 }

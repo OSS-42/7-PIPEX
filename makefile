@@ -96,9 +96,9 @@ SRCS_BONUS = src_bonus/pipex_bonus.c \
 
 #$(V).SILENT:
 
-all:	$(D_LIBFT)/$(LIBFT) $(NAME)
+all:	do_libft $(NAME)
 
-$(NAME):	$(OBJS) $(D_LIBFT)/$(LIBFT)
+$(NAME):	$(OBJS)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(D_LIBFT)$(LIBFT)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
 	@echo "$(LGREEN)Software Compilation completed ...$(NO_OF_FILES) files done !$(DEF_COLOR)"
@@ -107,19 +107,19 @@ $(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c
 		@mkdir -p $(D_OBJ)
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
-$(D_LIBFT)/$(LIBFT):
+do_libft:
 	@$(MAKE) -C $(D_LIBFT)
 
-$(NAME_BONUS): $(OBJS_BONUS) $(D_LIBFT)/$(LIBFT)
-	@$(CC) $(CFLAGS) -o $(OBJS_BONUS) $(D_LIBFT)$(LIBFT)
+$(NAME_BONUS): $(OBJS_BONUS)
+	@$(CC) $(CFLAGS) -o $@ $(OBJS_BONUS) $(D_LIBFT)$(LIBFT)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
 	@echo "$(LGREEN)Software Compilation completed !$(DEF_COLOR)"
 
-$(OBJ_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c
+$(OBJS_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c
 		@mkdir -p $(D_OBJ_BONUS)
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
-bonus: $(D_LIBFT)/$(LIBFT) $(NAME_BONUS)
+bonus: do_libft $(NAME_BONUS)
 
 #tests:	
 
