@@ -64,8 +64,11 @@ void	find_paths(t_vault *data)
 		}
 		x++;
 	}
-	data->path_names = ft_split(data->paths, ':');
-	free (data->paths);
-	if (!data->path_names)
-		exit_on_error(data, message(data, "Unexpected error.", "", 0));
+	if (!data->path_names || !data->envp[x])
+		exit_on_error(data, message(data, "Unexpected error.", "", 7));
+	else
+	{
+		data->path_names = ft_split(data->paths, ':');
+		free (data->paths);
+	}
 }

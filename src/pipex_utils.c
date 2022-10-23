@@ -33,8 +33,10 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 
 void	exit_on_error(t_vault *data, int error_code)
 {
-	free_dbl_ptr((void **)data->path_names);
-	exit (error_code);
+	if (error_code != 7)
+		free_dbl_ptr((void **)data->path_names);
+	else
+		exit (error_code);
 }
 
 void	check_fd_in(t_vault *data)
