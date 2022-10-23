@@ -33,16 +33,18 @@ LCYAN = \033[96m
 DEF_COLOR = \033[0;39m
 
 #****MAKEUP RULE****
+#****before emoji :
+#printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n";
 define run_and_test
 printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"; \
 $(1) 2> $@.log; \
 RESULT=$$?; \
 	if [ $$RESULT -ne 0 ]; then \
-		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "💥$(DEF_COLOR)\n"; \
 	elif [ -s $@.log ]; then \
-		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $@" "⚠️$(DEF_COLOR)\n"; \
 	else \
-		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)" "✅$(DEF_COLOR)\n"; \
 	fi; \
 	cat $@.log; \
 	rm -f $@.log; \
@@ -54,11 +56,11 @@ printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files$(DEF_COLOR)\r"; \
 $(1) 2> $@.log; \
 RESULT=$$?; \
 	if [ $$RESULT -ne 0 ]; then \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "💥$(DEF_COLOR)\n"; \
 	elif [ -s $@.log ]; then \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "⚠️$(DEF_COLOR)\n"; \
 	else \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Files" "✅$(DEF_COLOR)\n"; \
 	fi; \
 	cat $@.log; \
 	rm -f $@.log; \
@@ -70,11 +72,11 @@ printf "%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files$(DEF_CO
 $(1) 2> $@.log; \
 RESULT=$$?; \
 	if [ $$RESULT -ne 0 ]; then \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "$(LRED)$(ERROR_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "💥$(DEF_COLOR)\n"; \
 	elif [ -s $@.log ]; then \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Filess" "$(LYELLOW)$(WARN_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Filess" "⚠️$(DEF_COLOR)\n"; \
 	else \
-		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "$(LGREEN)$(OK_STRING)$(DEF_COLOR)\n"; \
+		printf "%-60b%b" "$(LCYAN)$(CLEAN_STRING)$(LMAGENTA) PROJECT Executable Files" "✅$(DEF_COLOR)\n"; \
 	fi; \
 	cat $@.log; \
 	rm -f $@.log; \
