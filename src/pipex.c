@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/15 17:45:49 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/26 14:06:24 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	main(int argc, char **argv, char **envp)
 	t_vault	data;
 	int		last_exit_code;
 
-	if ((argc != 5) || (!envp || envp[0][0] == '\0'))
+	if ((argc != 5) || (!envp || !envp[0]))
 	{
 		data.argc = 0;
 		data.fd_in = -1;
