@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
+/*   By: ewurstei <ewurstei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/21 10:07:50 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/25 12:14:29 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void	piping(t_vault *data)
 
 	x = 0;
 	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1) + 1);
+	if (!data->pipe_ends)
+		message(data, "Unexpected error.", "", 0);
 	while (x < data->nbr_cmd - 1)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);

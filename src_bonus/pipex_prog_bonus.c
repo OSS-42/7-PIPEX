@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_prog.c                                       :+:      :+:    :+:   */
+/*   pipex_prog_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
+/*   By: ewurstei <ewurstei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/18 14:58:34 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/25 12:15:02 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,11 @@ void	find_paths(t_vault *data)
 		}
 		x++;
 	}
-	data->path_names = ft_split(data->paths, ':');
-	free (data->paths);
-	if (!data->path_names)
-		exit_on_error(data, message(data, "Unexpected error.", "", 0));
+	if (!data->paths || !data->envp[x])
+		exit_on_error(data, message(data, "Unexpected error.", "", 7));
+	else
+	{
+		data->path_names = ft_split(data->paths, ':');
+		free (data->paths);
+	}
 }

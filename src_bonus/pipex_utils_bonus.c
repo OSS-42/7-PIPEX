@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
+/*   By: ewurstei <ewurstei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 20:17:51 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/21 10:00:00 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/10/25 12:15:01 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 
 void	exit_on_error(t_vault *data, int error_code)
 {
-	free_dbl_ptr((void **)data->path_names);
+	if (error_code != 7)
+		free_dbl_ptr((void **)data->path_names);
 	if (data->heredoc == 1)
 		unlink(".hd.tmp");
 	exit (error_code);
