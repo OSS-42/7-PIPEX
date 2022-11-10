@@ -7,13 +7,14 @@ CFLAGS = -g -Wall -Werror -Wextra
 RM = rm -rf
 LIBFT = libft.a
 HEADER = includes/pipex.h
-HEADER_BONUS = includes/pipex_bonus.h
-D_LIBFT = includes/libft/
+D_LIBFT = libft/
 D_SRC = src/
-D_SRC_BONUS = src_bonus/
 D_OBJ = obj/
-D_OBJ_BONUS = obj_bonus/
 OBJS = $(patsubst $(D_SRC)%.c,$(D_OBJ)%.o,$(SRCS))
+D_INTRO = pretty/
+HEADER_BONUS = includes/pipex_bonus.h
+D_SRC_BONUS = src_bonus/
+D_OBJ_BONUS = obj_bonus/
 OBJS_BONUS = $(patsubst $(D_SRC_BONUS)%.c,$(D_OBJ_BONUS)%.o,$(SRCS_BONUS))
 
 OK_STRING = "[OK]"
@@ -31,6 +32,15 @@ LYELLOW = \033[93
 LMAGENTA = \033[95m
 LCYAN = \033[96m
 DEF_COLOR = \033[0;39m
+
+#*****INTRO*****
+define intro_mandatory
+@bash $(D_INTRO)intro.sh
+endef
+
+define intro_bonus
+@bash $(D_INTRO)intro_bonus.sh
+endef
 
 #****MAKEUP RULE****
 #****before emoji :
@@ -98,7 +108,10 @@ SRCS_BONUS = src_bonus/pipex_bonus.c \
 
 #$(V).SILENT:
 
-all:	do_libft $(NAME)
+all:	deadpool do_libft $(NAME)
+
+deadpool:
+	@$(call intro_mandatory)
 
 $(NAME):	$(OBJS)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(D_LIBFT)$(LIBFT)
@@ -112,6 +125,9 @@ $(OBJS): $(D_OBJ)%.o : $(D_SRC)%.c $(HEADER)
 do_libft:
 	@$(MAKE) -C $(D_LIBFT)
 
+deadpool_bonus:
+	@$(call intro_bonus)
+
 $(NAME_BONUS): $(OBJS_BONUS)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS_BONUS) $(D_LIBFT)$(LIBFT)
 	@printf "%b" "$(LCYAN)$(COMP_STRING)$(LMAGENTA) $(@F)$(DEF_COLOR)\r"
@@ -121,11 +137,7 @@ $(OBJS_BONUS): $(D_OBJ_BONUS)%.o : $(D_SRC_BONUS)%.c $(HEADER_BONUS)
 		@mkdir -p $(D_OBJ_BONUS)
 		@$(call run_and_test, $(CC) $(CFLAGS) -c $< -o $@)
 
-bonus: do_libft $(NAME_BONUS)
-
-#tests:	
-
-#btests : bonus
+bonus: deadpool_bonus do_libft $(NAME_BONUS)
 	
 clean:
 	@$(call cleaning, $(RM) $(D_OBJ))
