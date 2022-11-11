@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/11/11 11:12:23 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 15:05:53 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	forking(t_vault *data)
 				close_pipe_ends(data);
 				find_prog(data, y + 2 + data->heredoc);
 			}
-			exit_on_error(data, message(data, "FD error.", "", 9));
+			else
+				exit_on_error(data, message(data, "FD error.", "", 9));
 		}
 		y++;
 	}
@@ -54,7 +55,7 @@ void	forking(t_vault *data)
 
 void	piping(t_vault *data)
 {
-	int		x;
+	int	x;
 
 	x = 0;
 	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1) + 1);
@@ -102,7 +103,6 @@ int	main(int argc, char **argv, char **envp)
 
 	data.heredoc = 0;
 	data.end_hd = 0;
-	check_env(&data, envp);
 	if (argc >= 5)
 	{
 		if (!ft_strncmp(argv[1], "here_doc", 9))

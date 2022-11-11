@@ -98,7 +98,6 @@ SRCS = src/pipex.c \
 		src/pipex_utils.c \
 		src/pipex_prog.c \
 		src/pipex_io.c \
-		src/pipex_init.c
 
 SRCS_BONUS = src_bonus/pipex_bonus.c \
 			src_bonus/pipex_utils_bonus.c \

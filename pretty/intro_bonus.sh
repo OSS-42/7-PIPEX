@@ -32,5 +32,5 @@ printf " \
 			${LMAGENTA}  O  O  O  O  OO  O  O   O  O    \n\
 			${LMAGENTA}  OOO   O  O  O O O  O   O   OO  \n\
 			${LMAGENTA}  O  O  O  O  O  OO  O   O     O \n\
-			${LMAGENTA}  OOO    OO   O   O   OOO   OOO  \n$\
+			${LMAGENTA}  OOO    OO   O   O   OOO   OOO  \n\
 			${NC}_________________________________\n"

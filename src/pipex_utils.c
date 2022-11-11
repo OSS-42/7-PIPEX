@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 20:17:51 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/06 20:17:51 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 15:24:39 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	message(t_vault *data, char *str1, char *str2, int error_code)
 
 void	exit_on_error(t_vault *data, int error_code)
 {
-	if (error_code != 7)
+	if (error_code == 7)
 		free_dbl_ptr((void **)data->path_names);
 	else
 		exit (error_code);
@@ -41,11 +41,11 @@ void	exit_on_error(t_vault *data, int error_code)
 
 void	check_fd_in(t_vault *data)
 {
-	data->fd_in = open(data->argv[1], O_RDONLY);
+	data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 	if (data->fd_in == -1)
 		exit_on_error(data, message(data, "FD_in error.", "", 9));
 	close(data->fd_in);
-	data->fd_in = open(data->argv[1], O_RDONLY);
+	data->fd_in = open(data->argv[1], O_RDONLY, 0644);
 }
 
 void	check_fd_out(t_vault *data)

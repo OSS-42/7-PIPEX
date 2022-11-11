@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/26 14:06:24 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 15:07:21 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,17 @@ void	forking(t_vault *data)
 		}
 		y++;
 	}
+	return ;
 }
 
-int	piping(t_vault *data)
+void	piping(t_vault *data)
 {
 	int	x;
 
 	x = 0;
 	data->pipe_ends = malloc(sizeof(int *) * (data->nbr_cmd - 1) + 1);
+	if (!data->pipe_ends)
+		message(data, "Unexpected error. #1", "", 0);
 	while (x < data->nbr_cmd - 1)
 	{
 		data->pipe_ends[x] = malloc(sizeof(int) * 2);
@@ -70,13 +73,27 @@ int	piping(t_vault *data)
 	data->child_id = waitpid(0, &data->status, 0);
 	while (data->child_id != -1)
 		data->child_id = waitpid(0, &data->status, 0);
-	return (0);
+	return ;
+}
+
+void	init_vault(t_vault *data, int argc, char **argv, char **envp)
+{
+	data->paths = NULL;
+	data->argc = argc;
+	data->argv = argv;
+	data->envp = envp;
+	data->nbr_cmd = argc - 3;
+	data->error_flag = 0;
+	data->fd_in = -1;
+	data->fd_out = -1;
+	find_paths(data);
+	piping(data);
+	free_dbl_ptr((void **)data->path_names);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_vault	data;
-	int		last_exit_code;
 
 	if ((argc != 5) || (!envp || !envp[0]))
 	{
@@ -86,12 +103,10 @@ int	main(int argc, char **argv, char **envp)
 		if (argc != 5)
 			message(&data, "Usage: ", "./pipex file1 cmd1 cmd2 file2.", 0);
 		else
-			message(&data, "Unexpected error.", "", 0);
+			message(&data, "Unexpected error. #2", "", 0);
 		return (0);
 	}
 	init_vault(&data, argc, argv, envp);
-	find_paths(&data);
-	last_exit_code = piping(&data);
-	free_dbl_ptr((void **)data.path_names);
-	return (last_exit_code);
+
+	return (0);
 }

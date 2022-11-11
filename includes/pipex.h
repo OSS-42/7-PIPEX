@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/11/10 15:30:35 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 13:00:27 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	find_prog(t_vault *data, int y);
 void	cmd_path_check(t_vault *data);
 
 /***** Logique *****/
-int		piping(t_vault *data);
+void	piping(t_vault *data);
 void	forking(t_vault *data);
 int		dup_fds(t_vault *data, int y);
 void	check_fd_in(t_vault *data);

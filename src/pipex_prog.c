@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:47:59 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/26 14:05:49 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 15:21:00 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	find_prog(t_vault *data, int argv_id)
 {
 	data->cmd.options = ft_split(data->argv[argv_id], ' ');
 	if (!data->cmd.options)
-		exit_on_error(data, message(data, "Unexpected error.", "", 0));
+		exit_on_error(data, message(data, "Unexpected error. #3", "", 0));
 	if (access(data->cmd.options[0], F_OK | X_OK) == 0)
 	{
 		data->cmd.name = data->cmd.options[0];
@@ -64,8 +64,8 @@ void	find_paths(t_vault *data)
 		}
 		x++;
 	}
-	if (!data->path_names || !data->envp[x])
-		exit_on_error(data, message(data, "Unexpected error.", "", 7));
+	if (!data->paths || !data->envp[x])
+		exit_on_error(data, message(data, "Unexpected error. #4", "", 7));
 	else
 	{
 		data->path_names = ft_split(data->paths, ':');

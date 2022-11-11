@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/11/11 11:07:09 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 15:05:41 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ char	*ft_join(char *stash, char *buffer);
 
 /***** Initialisation *****/
 void	launch_pipex(t_vault *data, char **argv, int argc, char **envp);
-void	check_env(t_vault *data, char **envp);
 void	find_paths(t_vault *data);
 void	find_prog(t_vault *data, int y);
 void	cmd_path_check(t_vault *data);
