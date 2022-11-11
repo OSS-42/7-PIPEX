@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ewurstei <ewurstei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 11:07:16 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/10/25 12:14:29 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 11:12:23 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	launch_pipex(t_vault *data, char **argv, int argc, char **envp)
 	data->error_flag = 0;
 	data->fd_in = -1;
 	data->fd_out = -1;
+	data->gnl_stash = NULL;
 	find_paths(data);
 	if (data->heredoc == 1)
 		detect_heredoc(data);

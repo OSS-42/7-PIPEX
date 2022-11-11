@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 14:23:32 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/04/21 12:39:15 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 10:56:30 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdint.h>
-# include "get_next_line.h"
 
 /**************************	STRUCT-LIST	*****************************/
 

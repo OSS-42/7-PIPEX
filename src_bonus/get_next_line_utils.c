@@ -6,11 +6,11 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 10:53:34 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/05/25 10:53:34 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 10:44:46 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/get_next_line.h"
+#include "../includes/pipex_bonus.h"
 
 char	*ft_search(char *string, char c)
 {

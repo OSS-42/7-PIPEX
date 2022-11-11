@@ -104,7 +104,9 @@ SRCS_BONUS = src_bonus/pipex_bonus.c \
 			src_bonus/pipex_utils_bonus.c \
 			src_bonus/pipex_prog_bonus.c \
 			src_bonus/pipex_io_bonus.c \
-			src_bonus/pipex_hd_bonus.c
+			src_bonus/pipex_hd_bonus.c \
+			src_bonus/get_next_line.c \
+			src_bonus/get_next_line_utils.c
 
 #$(V).SILENT:
 

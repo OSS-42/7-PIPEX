@@ -6,11 +6,11 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/17 10:28:38 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/11/07 13:46:47 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 11:08:27 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/get_next_line.h"
+#include "../includes/pipex_bonus.h"
 
 char	*ft_clean(char *string)
 {
@@ -63,9 +63,8 @@ char	*ft_linetoprint(char *string)
 	return (temp);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, t_vault *data)
 {
-	static char	*stash[257];
 	char		*line;
 	int			i;
 
@@ -75,19 +74,19 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (NULL);
 	i = 1;
-	while (!ft_search(stash[fd], '\n') && i != 0)
+	while (!ft_search(data->gnl_stash, '\n') && i != 0)
 	{
 		i = read(fd, line, BUFFER_SIZE);
 		if (i == -1)
 		{
-			free (line);
+			free(line);
 			return (NULL);
 		}
 		line[i] = '\0';
-		stash[fd] = ft_join(stash[fd], line);
+		data->gnl_stash = ft_join(data->gnl_stash, line);
 	}
 	free (line);
-	line = ft_linetoprint(stash[fd]);
-	stash[fd] = ft_clean(stash[fd]);
+	line = ft_linetoprint(data->gnl_stash);
+	data->gnl_stash = ft_clean(data->gnl_stash);
 	return (line);
 }

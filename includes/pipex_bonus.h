@@ -6,7 +6,7 @@
 /*   By: ewurstei <ewurstei@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:18:06 by ewurstei          #+#    #+#             */
-/*   Updated: 2022/11/10 15:30:41 by ewurstei         ###   ########.fr       */
+/*   Updated: 2022/11/11 11:07:09 by ewurstei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,20 @@ typedef struct s_vault
 	int		heredoc;
 	char	*limiter;
 	int		end_hd;
+	char	*gnl_stash;
 }	t_vault;
+
+/***** GNL FILES *****/
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
+char	*get_next_line(int fd, t_vault *data);
+char	*ft_clean(char *string);
+char	*ft_linetoprint(char *string);
+char	*ft_search(char *string, char c);
+size_t	ft_lenght(char *string);
+char	*ft_join(char *stash, char *buffer);
 
 /***** Initialisation *****/
 void	launch_pipex(t_vault *data, char **argv, int argc, char **envp);

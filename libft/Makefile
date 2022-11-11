@@ -141,8 +141,6 @@ SRCS = \
 		src/ft_lstclear.c \
 		src/ft_lstiter.c \
 		src/ft_lstmap.c \
-		src/get_next_line.c \
-		src/get_next_line_utils.c \
 		src/free_dbl_ptr.c \
 		src/ft_atolong.c
 
