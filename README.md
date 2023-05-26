@@ -1,6 +1,6 @@
 # 7-PIPEX
 
-<img src="https://user-images.githubusercontent.com/81205527/185808394-0045a614-600a-443d-add8-736951453ce3.png" />
+<img src="https://github.com/byaliego/42-project-badges/blob/main/badges/pipexm.png" />
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/xDeadpoolx/7-PIPEX?style=for-the-badge)
 
